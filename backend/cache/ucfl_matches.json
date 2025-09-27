@@ -1,0 +1,770 @@
+{
+  "1": [
+    {
+      "home": "Zrinjski Mostar",
+      "away": "Red Imps",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Lech Poznań",
+      "away": "Rapid Wien",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Jagiellonia",
+      "away": "Ħamrun Spartans FC",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Rayo Vallecano",
+      "away": "Shkëndija 79",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Lausanne-Sport",
+      "away": "Breiðablik",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Dynamo Kyiv",
+      "away": "Crystal Palace",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "AC Omonia",
+      "away": "Mainz 05",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "KuPS",
+      "away": "KF Drita",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Shelbourne FC",
+      "away": "Häcken",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Aberdeen",
+      "away": "Shakhtar",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "FC Noah",
+      "away": "Rijeka",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Fiorentina",
+      "away": "Sigma Olomouc",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Legia Warsaw",
+      "away": "Samsunspor",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Sparta Prague",
+      "away": "Shamrock Rov",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Raków",
+      "away": "CS U Craiova",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Slovan Bratislava",
+      "away": "Strasbourg",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "NK Celje",
+      "away": "AEK Athens",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "AÉK Lárnaka",
+      "away": "AZ Alkmaar",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    }
+  ],
+  "2": [
+    {
+      "home": "Breiðablik",
+      "away": "KuPS",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Häcken",
+      "away": "Rayo Vallecano",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Strasbourg",
+      "away": "Jagiellonia",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "KF Drita",
+      "away": "AC Omonia",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Rijeka",
+      "away": "Sparta Prague",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Shkëndija 79",
+      "away": "Shelbourne FC",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Rapid Wien",
+      "away": "Fiorentina",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Shakhtar",
+      "away": "Legia Warsaw",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "AEK Athens",
+      "away": "Aberdeen",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Shamrock Rov",
+      "away": "NK Celje",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Crystal Palace",
+      "away": "AÉK Lárnaka",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Sigma Olomouc",
+      "away": "Raków",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "AZ Alkmaar",
+      "away": "Slovan Bratislava",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Red Imps",
+      "away": "Lech Poznań",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Ħamrun Spartans FC",
+      "away": "Lausanne-Sport",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Mainz 05",
+      "away": "Zrinjski Mostar",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "CS U Craiova",
+      "away": "FC Noah",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Samsunspor",
+      "away": "Dynamo Kyiv",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    }
+  ],
+  "3": [
+    {
+      "home": "Mainz 05",
+      "away": "Fiorentina",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "NK Celje",
+      "away": "Legia Warsaw",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Sparta Prague",
+      "away": "Raków",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Shakhtar",
+      "away": "Breiðablik",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "AEK Athens",
+      "away": "Shamrock Rov",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "KuPS",
+      "away": "Slovan Bratislava",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "AÉK Lárnaka",
+      "away": "Aberdeen",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Crystal Palace",
+      "away": "AZ Alkmaar",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Shelbourne FC",
+      "away": "KF Drita",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Samsunspor",
+      "away": "Ħamrun Spartans FC",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Rayo Vallecano",
+      "away": "Lech Poznań",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Red Imps",
+      "away": "Rijeka",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Rapid Wien",
+      "away": "CS U Craiova",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Häcken",
+      "away": "Strasbourg",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Lausanne-Sport",
+      "away": "AC Omonia",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Shkëndija 79",
+      "away": "Jagiellonia",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "FC Noah",
+      "away": "Sigma Olomouc",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Dynamo Kyiv",
+      "away": "Zrinjski Mostar",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    }
+  ],
+  "4": [
+    {
+      "home": "Slovan Bratislava",
+      "away": "Rayo Vallecano",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Zrinjski Mostar",
+      "away": "Häcken",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Sigma Olomouc",
+      "away": "NK Celje",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Ħamrun Spartans FC",
+      "away": "Red Imps",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Lech Poznań",
+      "away": "Lausanne-Sport",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "AZ Alkmaar",
+      "away": "Shelbourne FC",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Raków",
+      "away": "Rapid Wien",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "CS U Craiova",
+      "away": "Mainz 05",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "AC Omonia",
+      "away": "Dynamo Kyiv",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Aberdeen",
+      "away": "FC Noah",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Breiðablik",
+      "away": "Samsunspor",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Shamrock Rov",
+      "away": "Shakhtar",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "KF Drita",
+      "away": "Shkëndija 79",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Rijeka",
+      "away": "AÉK Lárnaka",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Legia Warsaw",
+      "away": "Sparta Prague",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Strasbourg",
+      "away": "Crystal Palace",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Fiorentina",
+      "away": "AEK Athens",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Jagiellonia",
+      "away": "KuPS",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    }
+  ],
+  "5": [
+    {
+      "home": "Breiðablik",
+      "away": "Shamrock Rov",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Fiorentina",
+      "away": "Dynamo Kyiv",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Jagiellonia",
+      "away": "Rayo Vallecano",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Shkëndija 79",
+      "away": "Slovan Bratislava",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "KF Drita",
+      "away": "AZ Alkmaar",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Häcken",
+      "away": "AÉK Lárnaka",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "CS U Craiova",
+      "away": "Sparta Prague",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Shelbourne FC",
+      "away": "Crystal Palace",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Aberdeen",
+      "away": "Strasbourg",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Samsunspor",
+      "away": "AEK Athens",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Red Imps",
+      "away": "Sigma Olomouc",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Rijeka",
+      "away": "NK Celje",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Raków",
+      "away": "Zrinjski Mostar",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Rapid Wien",
+      "away": "AC Omonia",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Lech Poznań",
+      "away": "Mainz 05",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Ħamrun Spartans FC",
+      "away": "Shakhtar",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "FC Noah",
+      "away": "Legia Warsaw",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "KuPS",
+      "away": "Lausanne-Sport",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    }
+  ],
+  "6": [
+    {
+      "home": "Shamrock Rov",
+      "away": "Ħamrun Spartans FC",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Crystal Palace",
+      "away": "KuPS",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Lausanne-Sport",
+      "away": "Fiorentina",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Sparta Prague",
+      "away": "Aberdeen",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "NK Celje",
+      "away": "Shelbourne FC",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Mainz 05",
+      "away": "Samsunspor",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Strasbourg",
+      "away": "Breiðablik",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Sigma Olomouc",
+      "away": "Lech Poznań",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Legia Warsaw",
+      "away": "Red Imps",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Slovan Bratislava",
+      "away": "Häcken",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "AZ Alkmaar",
+      "away": "Jagiellonia",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Zrinjski Mostar",
+      "away": "Rapid Wien",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Rayo Vallecano",
+      "away": "KF Drita",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Shakhtar",
+      "away": "Rijeka",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "AÉK Lárnaka",
+      "away": "Shkëndija 79",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "AEK Athens",
+      "away": "CS U Craiova",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "AC Omonia",
+      "away": "Raków",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    },
+    {
+      "home": "Dynamo Kyiv",
+      "away": "FC Noah",
+      "home_score": null,
+      "away_score": null,
+      "played": false
+    }
+  ]
+}

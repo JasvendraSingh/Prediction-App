@@ -1,0 +1,32 @@
+version: "3.9"
+services:
+  ipfs:
+    image: ipfs/go-ipfs:latest
+    container_name: ipfs_node
+    ports:
+      - "4001:4001"
+      - "5001:5001"
+      - "8080:8080"
+    volumes:
+      - ipfs_data:/data/ipfs
+
+  backend:
+    build: ./backend
+    container_name: prediction_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - IPFS_API=http://ipfs:5001
+    depends_on:
+      - ipfs
+
+  frontend:
+    build: ./frontend
+    container_name: prediction_frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  ipfs_data:
