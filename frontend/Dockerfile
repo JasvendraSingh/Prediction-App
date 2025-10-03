@@ -1,35 +1,16 @@
-# Use node for build
+# Stage: Node dev server
 FROM node:20-alpine AS build
 
 WORKDIR /app
 
-# Copy package files
-COPY package.json package-lock.json ./
+COPY package*.json ./
+RUN npm install
 
-# Install dependencies
-RUN npm ci
-
-# Copy all source code
 COPY . .
 
-# Build-time argument for API URL
-ARG REACT_APP_API_URL
-ENV REACT_APP_API_URL=$REACT_APP_API_URL
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+ENV FRONTEND_PORT=5173
 
-# Build React app
-RUN npm run build
-
-# -------------------
-# Stage 2: Serve with Nginx
-# -------------------
-FROM nginx:alpine
-
-# Copy built files from previous stage
-COPY --from=build /app/build /usr/share/nginx/html
-
-# Copy custom nginx config if needed
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-EXPOSE 3000
-
-CMD ["nginx", "-g", "daemon off;"]
+# Dev server
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "5173"]
