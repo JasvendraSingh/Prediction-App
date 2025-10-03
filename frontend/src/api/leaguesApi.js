@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://127.0.0.1:8000/api'; // API prefix
+const BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 // Fetch matchdays for a given league
 export const fetchLeagueMatches = async (leagueName) => {
