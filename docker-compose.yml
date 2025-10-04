@@ -27,12 +27,13 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        VITE_API_URL: ${VITE_API_URL:-http://backend:8000} # internal backend URL
+        # Pass the Codespace HTTPS URL
+        VITE_API_URL: ${VITE_API_URL:-https://potential-space-couscous-5gpv5r69p7v7h5pr-8000.app.github.dev}
     container_name: prediction_frontend
     ports:
       - "${FRONTEND_PORT:-5173}:${FRONTEND_PORT:-5173}"  
     environment:
-      - VITE_API_URL=${VITE_API_URL:-http://backend:8000}
+      - VITE_API_URL=${VITE_API_URL:-https://potential-space-couscous-5gpv5r69p7v7h5pr-8000.app.github.dev}
       - FRONTEND_PORT=${FRONTEND_PORT:-5173}
     depends_on:
       - backend

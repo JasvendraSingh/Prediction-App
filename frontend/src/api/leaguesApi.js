@@ -1,11 +1,12 @@
 import axios from 'axios';
 
+// In browser, use the Codespace URL; fallback to relative /api for production
 const BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 // Fetch matchdays for a given league
 export const fetchLeagueMatches = async (leagueName) => {
   try {
-    const response = await axios.get(`${BASE_URL}/matches/${leagueName}`);
+    const response = await axios.get(`${BASE_URL}/api/matches/${leagueName}`);
     // Backend stores matchdays under next_matchdays
     return response.data.next_matchdays || {}; 
   } catch (err) {
@@ -17,7 +18,7 @@ export const fetchLeagueMatches = async (leagueName) => {
 // Submit predictions for a matchday
 export const submitPredictions = async (leagueName, predictions) => {
   try {
-    const response = await axios.post(`${BASE_URL}/predict/${leagueName}`, {
+    const response = await axios.post(`${BASE_URL}/api/predict/${leagueName}`, {
       predictions,
     });
     return response.data;
@@ -31,7 +32,7 @@ export const submitPredictions = async (leagueName, predictions) => {
 export const downloadLeaguePDF = async (leagueName) => {
   try {
     const response = await axios({
-      url: `${BASE_URL}/download/${leagueName}`,
+      url: `${BASE_URL}/api/download/${leagueName}`,
       method: 'GET',
       responseType: 'blob',
     });

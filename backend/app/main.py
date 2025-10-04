@@ -4,10 +4,10 @@ from app.routes import router
 
 app = FastAPI(title="UEFA Predictor API")
 
-# Allow React frontend
+# CORS must be added BEFORE routes
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # change to ["http://localhost:5173"] in prod
+    allow_origins=["*"],  # Allow all origins for now
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -15,3 +15,12 @@ app.add_middleware(
 
 # API routes under /api
 app.include_router(router, prefix="/api")
+
+# Add a health check endpoint at root
+@app.get("/")
+def health_check():
+    return {"status": "ok", "message": "UEFA Predictor API is running"}
+
+@app.get("/health")
+def health():
+    return {"status": "healthy"}
