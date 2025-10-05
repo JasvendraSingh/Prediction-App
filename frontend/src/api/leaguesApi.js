@@ -1,26 +1,29 @@
 import axios from 'axios';
 
-// In browser, use the Codespace URL; fallback to relative /api for production
-const BASE_URL = import.meta.env.VITE_API_URL || '/api';
+// Use Codespace/ENV URL if available, otherwise fallback to relative path
+// Example: https://your-username-8000.app.github.dev
+const BASE_URL = import.meta.env.VITE_API_URL || '';
 
-// Fetch matchdays for a given league
+/**
+ * Fetch all matchdays for a given league
+ */
 export const fetchLeagueMatches = async (leagueName) => {
   try {
     const response = await axios.get(`${BASE_URL}/api/matches/${leagueName}`);
-    // Backend stores matchdays under next_matchdays
-    return response.data.next_matchdays || {}; 
+    // Backend sends matchdays under "next_matchdays"
+    return response.data.next_matchdays || {};
   } catch (err) {
     console.error("Error fetching league matches:", err);
     return {};
   }
 };
 
-// Submit predictions for a matchday
-export const submitPredictions = async (leagueName, predictions) => {
+/**
+ * Submit predictions for the current matchday of a league
+ */
+export const submitPredictions = async (leagueName, payload) => {
   try {
-    const response = await axios.post(`${BASE_URL}/api/predict/${leagueName}`, {
-      predictions,
-    });
+    const response = await axios.post(`${BASE_URL}/api/predict/${leagueName}`, payload);
     return response.data;
   } catch (err) {
     console.error("Error submitting predictions:", err);
@@ -28,7 +31,11 @@ export const submitPredictions = async (leagueName, predictions) => {
   }
 };
 
-// Download final league table PDF
+
+
+/**
+ * Download final league prediction table as PDF
+ */
 export const downloadLeaguePDF = async (leagueName) => {
   try {
     const response = await axios({

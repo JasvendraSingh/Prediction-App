@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Box, TextField, Typography, Paper } from "@mui/material";
 
 const leagueColors = {
@@ -35,6 +35,27 @@ const PredictionForm = ({ matches = [], onSubmit, league }) => {
     }, 100);
   }, [matches]);
 
+  // Create stable callback using useCallback
+  const notifyParent = useCallback(() => {
+    if (Object.keys(predictions).length > 0) {
+      const formatted = {};
+      Object.entries(predictions).forEach(([key, value]) => {
+        const homeScore = value?.homeScore || "0";
+        const awayScore = value?.awayScore || "0";
+        formatted[key] = `${homeScore}-${awayScore}`;
+      });
+      console.log("PredictionForm sending to parent:", formatted);
+      if (onSubmit) {
+        onSubmit(formatted);
+      }
+    }
+  }, [predictions, onSubmit]);
+
+  // Call notifyParent whenever predictions change
+  useEffect(() => {
+    notifyParent();
+  }, [notifyParent]);
+
   const handleChange = (key, field, value) => {
     if (value === "" || /^\d+$/.test(value)) {
       setPredictions((prev) => ({
@@ -53,8 +74,6 @@ const PredictionForm = ({ matches = [], onSubmit, league }) => {
       }
     }
   };
-
-  // Removed handleBlur function and auto-submit functionality
 
   if (!Array.isArray(matches) || matches.length === 0) {
     return (

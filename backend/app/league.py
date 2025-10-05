@@ -29,3 +29,25 @@ def calculate_league_table(matches, predictions):
         teams[away]["goal_difference"] += (away_score - home_score)
 
     return teams
+
+
+def format_table_for_frontend(teams_dict):
+    """
+    Convert the teams dictionary to a sorted array for the frontend
+    """
+    table = []
+    for team_name, stats in teams_dict.items():
+        table.append({
+            "team": team_name,
+            "points": stats["points"],
+            "gd": stats["goal_difference"],
+            "played": stats["played"],
+            "won": stats["won"],
+            "draw": stats["draw"],
+            "lost": stats["lost"]
+        })
+    
+    # Sort by points (desc), then by goal difference (desc)
+    table.sort(key=lambda x: (x["points"], x["gd"]), reverse=True)
+    
+    return table

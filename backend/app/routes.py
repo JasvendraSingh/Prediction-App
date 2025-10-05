@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from fastapi.responses import JSONResponse, FileResponse
 from .scraping import scrape_uel, scrape_ucfl
 from .predictions import parse_predictions, league_progress
-from .league import calculate_league_table
+from .league import calculate_league_table, format_table_for_frontend
 from .pdf_utils import export_to_pdf
 from .ipfs_utils import save_to_ipfs
 
@@ -37,7 +37,8 @@ def get_matches(league: str):
     real_results = apply_real_results(matches_by_day)
     league_progress[league_upper] = real_results
 
-    table = calculate_league_table(matches_by_day, real_results)
+    table_dict = calculate_league_table(matches_by_day, real_results)
+    table_array = format_table_for_frontend(table_dict)
 
     # Only upcoming matchdays for predictions
     unplayed = {
@@ -47,7 +48,7 @@ def get_matches(league: str):
 
     return {
         "league": league_upper,
-        "completed_table": table,
+        "completed_table": table_array,
         "next_matchdays": unplayed
     }
 
@@ -55,6 +56,11 @@ def get_matches(league: str):
 def submit_predictions(league: str, payload: dict):
     matchday = payload.get("matchday")
     predictions = payload.get("predictions", {})
+
+    print(f"\n=== DEBUG: Submit Predictions ===")
+    print(f"League: {league}")
+    print(f"Matchday: {matchday}")
+    print(f"Received predictions: {predictions}")
 
     matches_by_day = get_matches_for_league(league)
     if matches_by_day is None or matchday not in matches_by_day:
@@ -67,17 +73,25 @@ def submit_predictions(league: str, payload: dict):
         return JSONResponse({"error": "This matchday is already played."}, status_code=400)
 
     league_progress.setdefault(league_upper, {})
+    
+    print(f"League progress BEFORE parse: {league_progress[league_upper]}")
 
     league_progress[league_upper] = parse_predictions(
         [(m["home"], m["away"]) for m in matches_by_day[matchday]],
         predictions,
         league_upper
     )
+    
+    print(f"League progress AFTER parse: {league_progress[league_upper]}")
 
-    table = calculate_league_table(matches_by_day, league_progress[league_upper])
-    last_tables[league_upper] = table
+    table_dict = calculate_league_table(matches_by_day, league_progress[league_upper])
+    
+    print(f"Calculated table: {table_dict}")
+    
+    table_array = format_table_for_frontend(table_dict)
+    last_tables[league_upper] = table_dict
 
-    return {"league": league_upper, "matchday": matchday, "table": table}
+    return {"league": league_upper, "matchday": matchday, "table": table_array}
 
 @router.get("/download/{league}")
 def download_pdf(league: str):
