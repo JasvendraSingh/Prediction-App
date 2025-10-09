@@ -1,0 +1,75 @@
+name: Docker Build & Push
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    env:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    steps:
+      # 1. Checkout repo
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. Log in to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ env.DOCKERHUB_USERNAME }}
+          password: ${{ env.DOCKERHUB_TOKEN }}
+
+      # 3. Get list of changed folders
+      - name: Determine changed folders
+        id: changes
+        run: |
+          echo "CHANGED_FRONTEND=false" >> $GITHUB_ENV
+          echo "CHANGED_BACKEND=false" >> $GITHUB_ENV
+          echo "CHANGED_TESTS=false" >> $GITHUB_ENV
+          git fetch origin main --depth=1
+          CHANGED=$(git diff --name-only origin/main HEAD)
+          if echo "$CHANGED" | grep -q '^frontend/'; then
+            echo "CHANGED_FRONTEND=true" >> $GITHUB_ENV
+          fi
+          if echo "$CHANGED" | grep -q '^backend/'; then
+            echo "CHANGED_BACKEND=true" >> $GITHUB_ENV
+          fi
+          if echo "$CHANGED" | grep -q '^tests/'; then
+            echo "CHANGED_TESTS=true" >> $GITHUB_ENV
+          fi
+
+      # 4. Build & push frontend if changed
+      - name: Build and push frontend
+        if: env.CHANGED_FRONTEND == 'true'
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          push: true
+          tags: ${{ env.DOCKERHUB_USERNAME }}/frontend:latest
+
+      # 5. Build & push backend if changed
+      - name: Build and push backend
+        if: env.CHANGED_BACKEND == 'true'
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: true
+          tags: ${{ env.DOCKERHUB_USERNAME }}/backend:latest
+
+      # 6. Build & push tests if changed
+      - name: Build and push tests
+        if: env.CHANGED_TESTS == 'true'
+        uses: docker/build-push-action@v5
+        with:
+          context: ./tests
+          file: ./tests/Dockerfile
+          push: true
+          tags: ${{ env.DOCKERHUB_USERNAME }}/tests:latest

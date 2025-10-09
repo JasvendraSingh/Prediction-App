@@ -12,6 +12,7 @@ const getTeamIcon = (teamName) => {
 };
 
 const PredictionForm = ({ matches = [], onSubmit, league }) => {
+  if (!matches || matches.length === 0) return <p>No matches available.</p>;
   const [predictions, setPredictions] = useState({});
   const inputRefs = useRef([]);
 

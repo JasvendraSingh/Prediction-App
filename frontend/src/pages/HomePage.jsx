@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardContent,
   CardActions,
+  Chip,
 } from "@mui/material";
 import LeagueSelector from "../components/LeagueSelector";
 import PredictionForm from "../components/PredictionForm";
@@ -39,6 +40,9 @@ const HomePage = () => {
   const [currentDayIndex, setCurrentDayIndex] = useState(0);
   const [predictions, setPredictions] = useState({});
   const [table, setTable] = useState(null);
+  const [initialTable, setInitialTable] = useState(null);
+  const [firstUnplayedMatchday, setFirstUnplayedMatchday] = useState(null);
+  const [playedResultsCount, setPlayedResultsCount] = useState(0);
   const [loading, setLoading] = useState(false);
 
   // Fetch matchdays whenever league changes
@@ -46,48 +50,63 @@ const HomePage = () => {
     if (!league) return;
     setLoading(true);
     fetchLeagueMatches(league)
-      .then((data) => {
+      .then((response) => {
+        console.log("Fetched league data:", response);
+        
+        const data = response.next_matchdays || {};
         const filtered = Object.fromEntries(
           Object.entries(data).filter(([_, matches]) => matches?.length > 0)
         );
+        
         setMatchdays(filtered);
         const keys = Object.keys(filtered);
         setMatchdayKeys(keys);
         setCurrentDayIndex(0);
         setTable(null);
         setPredictions({});
+        
+        // Set initial table with played matches
+        if (response.completed_table) {
+          setInitialTable(response.completed_table);
+        }
+        
+        // Set first unplayed matchday info
+        if (response.first_unplayed_matchday) {
+          setFirstUnplayedMatchday(response.first_unplayed_matchday);
+        }
+        
+        // Count played results
+        if (response.played_results) {
+          setPlayedResultsCount(Object.keys(response.played_results).length);
+        }
       })
       .finally(() => setLoading(false));
   }, [league]);
 
-  const handlePredictions = async (formattedPredictions) => {
-    if (!league) return;
-    const currentMatchday = matchdayKeys[currentDayIndex];
+const handlePredictions = async (formattedPredictions) => {
+  if (!league) return;
+  const currentMatchday = matchdayKeys[currentDayIndex];
+  const payload = { matchday: currentMatchday, predictions: formattedPredictions };
 
-    const payload = {
-      matchday: currentMatchday,
-      predictions: formattedPredictions,
-    };
+  setLoading(true);
+  try {
+    const result = await submitPredictions(league, payload);
 
-    console.log("Sending payload:", JSON.stringify(payload, null, 2));
+    // Always set table to array (even empty)
+    setTable(result?.table || []);
 
-    setLoading(true);
-    try {
-      const result = await submitPredictions(league, payload);
-      
-      if (currentDayIndex === matchdayKeys.length - 1) {
-        console.log("Setting table data:", result.table);
-        setTable(result.table || null);
-      }
-      
-      return result;
-    } catch (err) {
-      console.error("Error submitting predictions:", err);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
+    // Reset predictions for current matchday after submit
+    setPredictions((prev) => ({ ...prev, [currentMatchday]: {} }));
+
+    return result;
+  } catch (err) {
+    console.error("Error submitting predictions:", err);
+    throw err;
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const handleDownload = async () => {
     if (!league) return;
@@ -109,9 +128,12 @@ const HomePage = () => {
     setLeague("");
     setPredictions({});
     setTable(null);
+    setInitialTable(null);
     setMatchdays({});
     setMatchdayKeys([]);
     setCurrentDayIndex(0);
+    setFirstUnplayedMatchday(null);
+    setPlayedResultsCount(0);
   };
 
   const currentMatchday = matchdayKeys[currentDayIndex];
@@ -229,6 +251,58 @@ const HomePage = () => {
           </CardContent>
         </Card>
 
+        {/* Show initial table with played matches */}
+        {!loading && initialTable && !table && playedResultsCount > 0 && (
+          <Card
+            sx={{
+              mb: 4,
+              borderRadius: 4,
+              boxShadow: `0 20px 40px rgba(${
+                league === "UEL" ? "255,152,0" : "0,255,136"
+              }, 0.3)`,
+              background: "rgba(0,0,0,0.8)",
+              backdropFilter: "blur(20px)",
+              border: `1px solid rgba(${
+                league === "UEL" ? "255,152,0" : "0,255,136"
+              }, 0.2)`,
+            }}
+          >
+            <CardHeader
+              title={
+                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                  <Typography variant="h5" sx={{ color: "white", fontWeight: 700 }}>
+                    📊 Current Standings
+                  </Typography>
+                  <Chip 
+                    label={`${playedResultsCount} matches played`}
+                    size="small"
+                    sx={{ 
+                      backgroundColor: leagueColors[league] || "#00ff88",
+                      color: "black",
+                      fontWeight: 600
+                    }}
+                  />
+                </Box>
+              }
+              subheader={
+                <Typography
+                  sx={{ color: leagueColors[league] || "#00ff88", opacity: 0.8 }}
+                >
+                  {firstUnplayedMatchday ? `Next: Matchday ${firstUnplayedMatchday}` : "All matches complete"}
+                </Typography>
+              }
+              sx={{
+                backgroundColor: "rgba(0,0,0,0.4)",
+                borderTopLeftRadius: 16,
+                borderTopRightRadius: 16,
+              }}
+            />
+            <CardContent>
+              <LeagueTable tableData={initialTable} />
+            </CardContent>
+          </Card>
+        )}
+
         {loading && (
           <Box textAlign="center" sx={{ mt: 4 }}>
             <CircularProgress
@@ -307,30 +381,34 @@ const HomePage = () => {
                 Back
               </Button>
               <Button
-                variant="contained"
-                onClick={async () => {
-                  const currentPreds = predictions[currentMatchday] || {};
-                  console.log("Button clicked - predictions:", currentPreds);
-                  await handlePredictions(currentPreds);
-                  if (currentDayIndex < matchdayKeys.length - 1) {
-                    setCurrentDayIndex((prev) => prev + 1);
-                  }
-                }}
-                sx={{
-                  borderRadius: "25px",
-                  px: 4,
-                  py: 1.5,
-                  backgroundColor: leagueColors[league] || "#00ff88",
-                  color: "black",
-                  fontWeight: 700,
-                  "&:hover": {
-                    backgroundColor: leagueColors[league] || "#00ff88",
-                    opacity: 0.9,
-                  },
-                }}
-              >
-                {currentDayIndex === matchdayKeys.length - 1 ? "Finish" : "Next Matchday"}
-              </Button>
+  variant="contained"
+  onClick={async () => {
+    const currentPreds = predictions[currentMatchday] || {};
+    const result = await handlePredictions(currentPreds);
+
+    // Move to next matchday only if exists
+    if (currentDayIndex < matchdayKeys.length - 1) {
+      setCurrentDayIndex((prev) => prev + 1);
+    }
+
+    // Table is always updated after every submission
+    if (result?.table) {
+      setTable(result.table);
+    }
+  }}
+  sx={{
+    borderRadius: "25px",
+    px: 4,
+    py: 1.5,
+    backgroundColor: leagueColors[league] || "#00ff88",
+    color: "black",
+    fontWeight: 700,
+    "&:hover": { opacity: 0.9 },
+  }}
+>
+  {currentDayIndex === matchdayKeys.length - 1 ? "Finish" : "Next Matchday"}
+</Button>
+
             </CardActions>
           </Card>
         )}
@@ -424,9 +502,11 @@ const HomePage = () => {
             }}
           >
             <Typography sx={{ color: "white", fontSize: "1.2rem" }}>
-              No matches available for this league.
+              {playedResultsCount > 0 
+                ? "All matches have been played! Check the table above."
+                : "No matches available for this league."}
             </Typography>
-            </Box>
+          </Box>
         )}
       </Container>
     </Box>
