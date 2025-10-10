@@ -11,7 +11,6 @@ import {
   CardActions,
   Chip,
 } from "@mui/material";
-import LeagueSelector from "../components/LeagueSelector";
 import PredictionForm from "../components/PredictionForm";
 import LeagueTable from "../components/LeagueTable";
 import { fetchLeagueMatches, submitPredictions, downloadLeaguePDF } from "../api/leaguesApi";
@@ -43,70 +42,71 @@ const HomePage = () => {
   const [initialTable, setInitialTable] = useState(null);
   const [firstUnplayedMatchday, setFirstUnplayedMatchday] = useState(null);
   const [playedResultsCount, setPlayedResultsCount] = useState(0);
+  const [totalMatchdays, setTotalMatchdays] = useState(0);
   const [loading, setLoading] = useState(false);
 
   // Fetch matchdays whenever league changes
   useEffect(() => {
     if (!league) return;
+    
     setLoading(true);
     fetchLeagueMatches(league)
       .then((response) => {
-        console.log("Fetched league data:", response);
-        
+        console.log("Fetched league data:", response);        
         const data = response.next_matchdays || {};
         const filtered = Object.fromEntries(
           Object.entries(data).filter(([_, matches]) => matches?.length > 0)
         );
-        
+                
         setMatchdays(filtered);
-        const keys = Object.keys(filtered);
+        const keys = Object.keys(filtered).sort((a, b) => parseInt(a) - parseInt(b));
         setMatchdayKeys(keys);
         setCurrentDayIndex(0);
         setTable(null);
         setPredictions({});
-        
         // Set initial table with played matches
         if (response.completed_table) {
           setInitialTable(response.completed_table);
-        }
-        
+        }        
         // Set first unplayed matchday info
         if (response.first_unplayed_matchday) {
           setFirstUnplayedMatchday(response.first_unplayed_matchday);
-        }
-        
+        }        
         // Count played results
         if (response.played_results) {
           setPlayedResultsCount(Object.keys(response.played_results).length);
+        }        
+        // Set total matchdays
+        if (response.total_matchdays) {
+          setTotalMatchdays(response.total_matchdays);
         }
+      })
+      .catch((err) => {
+        console.error("Error fetching league data:", err);
       })
       .finally(() => setLoading(false));
   }, [league]);
 
-const handlePredictions = async (formattedPredictions) => {
-  if (!league) return;
-  const currentMatchday = matchdayKeys[currentDayIndex];
-  const payload = { matchday: currentMatchday, predictions: formattedPredictions };
+  const handlePredictions = async (formattedPredictions) => {
+    if (!league) return;
+    const currentMatchday = matchdayKeys[currentDayIndex];
+    const payload = { matchday: currentMatchday, predictions: formattedPredictions };
 
-  setLoading(true);
-  try {
-    const result = await submitPredictions(league, payload);
-
-    // Always set table to array (even empty)
-    setTable(result?.table || []);
-
-    // Reset predictions for current matchday after submit
-    setPredictions((prev) => ({ ...prev, [currentMatchday]: {} }));
-
-    return result;
-  } catch (err) {
-    console.error("Error submitting predictions:", err);
-    throw err;
-  } finally {
-    setLoading(false);
-  }
-};
-
+    setLoading(true);
+    try {
+      const result = await submitPredictions(league, payload);
+      // Always set table to array (even empty)
+      setTable(result?.table || []);
+      // Reset predictions for current matchday after submit
+      setPredictions((prev) => ({ ...prev, [currentMatchday]: {} }));
+      return result;
+    } catch (err) {
+      console.error("Error submitting predictions:", err);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleDownload = async () => {
     if (!league) return;
@@ -134,6 +134,7 @@ const handlePredictions = async (formattedPredictions) => {
     setCurrentDayIndex(0);
     setFirstUnplayedMatchday(null);
     setPlayedResultsCount(0);
+    setTotalMatchdays(0);
   };
 
   const currentMatchday = matchdayKeys[currentDayIndex];
@@ -199,7 +200,6 @@ const handlePredictions = async (formattedPredictions) => {
             {leagueFullNames[league] || "League"}
           </Box>
         </Box>
-
         <Card
           sx={{
             mb: 4,
@@ -269,9 +269,9 @@ const handlePredictions = async (formattedPredictions) => {
           >
             <CardHeader
               title={
-                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 2, flexWrap: "wrap" }}>
                   <Typography variant="h5" sx={{ color: "white", fontWeight: 700 }}>
-                    📊 Current Standings
+                    Current League Table
                   </Typography>
                   <Chip 
                     label={`${playedResultsCount} matches played`}
@@ -282,13 +282,22 @@ const handlePredictions = async (formattedPredictions) => {
                       fontWeight: 600
                     }}
                   />
+                  <Chip 
+                    label={`Matchday ${firstUnplayedMatchday} coming up`}
+                    size="small"
+                    sx={{ 
+                      backgroundColor: "rgba(255,255,255,0.2)",
+                      color: "white",
+                      fontWeight: 600
+                    }}
+                  />
                 </Box>
               }
               subheader={
                 <Typography
-                  sx={{ color: leagueColors[league] || "#00ff88", opacity: 0.8 }}
+                  sx={{ color: leagueColors[league] || "#00ff88", opacity: 0.8, mt: 1 }}
                 >
-                  {firstUnplayedMatchday ? `Next: Matchday ${firstUnplayedMatchday}` : "All matches complete"}
+                  Based on real results • Start predicting from Matchday {firstUnplayedMatchday}
                 </Typography>
               }
               sx={{
@@ -302,7 +311,6 @@ const handlePredictions = async (formattedPredictions) => {
             </CardContent>
           </Card>
         )}
-
         {loading && (
           <Box textAlign="center" sx={{ mt: 4 }}>
             <CircularProgress
@@ -314,7 +322,6 @@ const handlePredictions = async (formattedPredictions) => {
             />
           </Box>
         )}
-
         {!loading && currentMatchday && !table && (
           <Card
             sx={{
@@ -337,11 +344,22 @@ const handlePredictions = async (formattedPredictions) => {
                 </Typography>
               }
               subheader={
-                <Typography
-                  sx={{ color: leagueColors[league] || "#00ff88", opacity: 0.8 }}
-                >
-                  {leagueFullNames[league] || league}
-                </Typography>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 2, mt: 1, flexWrap: "wrap" }}>
+                  <Typography
+                    sx={{ color: leagueColors[league] || "#00ff88", opacity: 0.8 }}
+                  >
+                    {leagueFullNames[league] || league}
+                  </Typography>
+                  <Chip 
+                    label={`${currentDayIndex + 1} of ${matchdayKeys.length} unplayed matchdays`}
+                    size="small"
+                    sx={{ 
+                      backgroundColor: "rgba(255,255,255,0.1)",
+                      color: "white",
+                      fontWeight: 600
+                    }}
+                  />
+                </Box>
               }
               sx={{
                 backgroundColor: "rgba(0,0,0,0.4)",
@@ -376,39 +394,43 @@ const handlePredictions = async (formattedPredictions) => {
                       league === "UEL" ? "255,152,0" : "0,255,136"
                     }, 0.1)`,
                   },
+                  "&:disabled": {
+                    borderColor: "rgba(255,255,255,0.1)",
+                    color: "rgba(255,255,255,0.3)",
+                  },
                 }}
               >
-                Back
+                ← Back
               </Button>
               <Button
-  variant="contained"
-  onClick={async () => {
-    const currentPreds = predictions[currentMatchday] || {};
-    const result = await handlePredictions(currentPreds);
-
-    // Move to next matchday only if exists
-    if (currentDayIndex < matchdayKeys.length - 1) {
-      setCurrentDayIndex((prev) => prev + 1);
-    }
-
-    // Table is always updated after every submission
-    if (result?.table) {
-      setTable(result.table);
-    }
-  }}
-  sx={{
-    borderRadius: "25px",
-    px: 4,
-    py: 1.5,
-    backgroundColor: leagueColors[league] || "#00ff88",
-    color: "black",
-    fontWeight: 700,
-    "&:hover": { opacity: 0.9 },
-  }}
->
-  {currentDayIndex === matchdayKeys.length - 1 ? "Finish" : "Next Matchday"}
-</Button>
-
+                variant="contained"
+                onClick={async () => {
+                  const currentPreds = predictions[currentMatchday] || {};
+                  const result = await handlePredictions(currentPreds);
+                  // Move to next matchday only if exists
+                  if (currentDayIndex < matchdayKeys.length - 1) {
+                    setCurrentDayIndex((prev) => prev + 1);
+                  }
+                  // Table is always updated after every submission
+                  if (result?.table) {
+                    setTable(result.table);
+                  }
+                }}
+                sx={{
+                  borderRadius: "25px",
+                  px: 4,
+                  py: 1.5,
+                  backgroundColor: leagueColors[league] || "#00ff88",
+                  color: "black",
+                  fontWeight: 700,
+                  "&:hover": { 
+                    opacity: 0.9,
+                    backgroundColor: leagueColors[league] || "#00ff88",
+                  },
+                }}
+              >
+                {currentDayIndex === matchdayKeys.length - 1 ? "Finish →" : "Next Matchday →"}
+              </Button>
             </CardActions>
           </Card>
         )}
@@ -430,15 +452,26 @@ const handlePredictions = async (formattedPredictions) => {
           >
             <CardHeader
               title={
-                <Typography variant="h5" sx={{ color: "white", fontWeight: 700 }}>
-                  🏆 Final Standings
-                </Typography>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                  <Typography variant="h5" sx={{ color: "white", fontWeight: 700 }}>
+                    Final League Table
+                  </Typography>
+                  <Chip 
+                    label="Predictions Complete"
+                    size="small"
+                    sx={{ 
+                      backgroundColor: leagueColors[league] || "#00ff88",
+                      color: "black",
+                      fontWeight: 600
+                    }}
+                  />
+                </Box>
               }
               subheader={
                 <Typography
-                  sx={{ color: leagueColors[league] || "#00ff88", opacity: 0.8 }}
+                  sx={{ color: leagueColors[league] || "#00ff88", opacity: 0.8, mt: 1 }}
                 >
-                  {leagueFullNames[league] || league}
+                  Based on {playedResultsCount} real results + your predictions
                 </Typography>
               }
               sx={{
@@ -461,9 +494,13 @@ const handlePredictions = async (formattedPredictions) => {
                   backgroundColor: leagueColors[league] || "#00ff88",
                   color: "black",
                   fontWeight: 700,
+                  "&:hover": {
+                    opacity: 0.9,
+                    backgroundColor: leagueColors[league] || "#00ff88",
+                  },
                 }}
               >
-                Download Final PDF
+                Download PDF
               </Button>
               <Button
                 variant="outlined"
@@ -501,10 +538,15 @@ const handlePredictions = async (formattedPredictions) => {
               }, 0.3)`,
             }}
           >
-            <Typography sx={{ color: "white", fontSize: "1.2rem" }}>
+            <Typography sx={{ color: "white", fontSize: "1.5rem", fontWeight: 600, mb: 2 }}>
               {playedResultsCount > 0 
-                ? "All matches have been played! Check the table above."
-                : "No matches available for this league."}
+                ? "All Matchdays Complete!"
+                : "No Matches Available"}
+            </Typography>
+            <Typography sx={{ color: "white", fontSize: "1.1rem", opacity: 0.8 }}>
+              {playedResultsCount > 0 
+                ? `All ${totalMatchdays} matchdays have been played. Check the standings above!`
+                : "No matches are currently scheduled for this league."}
             </Typography>
           </Box>
         )}

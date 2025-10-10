@@ -32,9 +32,9 @@ def test_scraper(scraper_func, name):
 
         if not matches:
             if is_blocked:
-                print("⚠️ Scraper returned no data: Blocked by Cloudflare!")
+                print("Scraper returned no data: Blocked by Cloudflare!")
             else:
-                print("⚠️ Scraper returned no data: Table missing or wrong table ID.")
+                print("Scraper returned no data: Table missing or wrong table ID.")
             return
 
         for day, games in matches.items():
@@ -44,14 +44,14 @@ def test_scraper(scraper_func, name):
             print("-" * 40)
 
     except requests.exceptions.RequestException as e:
-        print("❌ Network error:", e)
+        print("Network error:", e)
 
     except Exception as e:
         # Skip IPFS errors during testing
         if "ipfshttpclient" in str(e):
-            print("⚠️ Skipping IPFS during test:", e)
+            print("Skipping IPFS during test:", e)
         else:
-            print("❌ Scraper error:", e)
+            print("Scraper error:", e)
 
     print(f"\n{name} test completed.")
 

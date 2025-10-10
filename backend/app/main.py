@@ -3,11 +3,15 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routes import router
 
 app = FastAPI(title="UEFA Predictor API")
+origins = [
+    "https://friendly-adventure-wrjvx564jjq42vq4v-5173.app.github.dev",
+    "http://localhost:5173",
+]
 
 # CORS must be added BEFORE routes
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins for now
+    allow_origins=origins,  # Allow all origins for now
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

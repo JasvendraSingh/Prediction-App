@@ -7,13 +7,12 @@ Suite Setup    Open Browser To App
 Suite Teardown    Close Browser
 
 *** Variables ***
-${APP_URL}    http://localhost:3000
 ${BROWSER}    Chrome
 ${PDF_PATH}   ./test_output.pdf
 
 *** Keywords ***
 Open Browser To App
-    Open Browser    ${APP_URL}    ${BROWSER}
+    Open Browser    ${URL}    ${BROWSER}
     Maximize Browser Window
 
 Submit Prediction

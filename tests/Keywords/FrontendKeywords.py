@@ -3,7 +3,7 @@ import os
 import time
 import requests
 
-BACKEND_URL = "https://potential-space-couscous-5gpv5r69p7v7h5pr-8000.app.github.dev"
+BACKEND_URL = "https://friendly-adventure-wrjvx564jjq42vq4v-8000.app.github.dev"
 
 class FrontendKeywords:
 

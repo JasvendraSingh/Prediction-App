@@ -1,21 +1,7 @@
 import axios from 'axios';
 
-// Use Codespace/ENV URL if available, otherwise fallback to relative path
 const BASE_URL = import.meta.env.VITE_API_URL || '';
 
-/**
- * Fetch all matchdays for a given league.
- * Now includes completed table, played results, first unplayed matchday, and metadata.
- * Returns:
- * {
- *   league: "UEL" | "UCFL",
- *   completed_table: [...],
- *   next_matchdays: {...},           // only unplayed matchdays
- *   first_unplayed_matchday: "X",
- *   played_results: {...},           // {(home, away): (score)}
- *   metadata: {...}
- * }
- */
 export const fetchLeagueMatches = async (leagueName) => {
   try {
     const response = await axios.get(`${BASE_URL}/api/matches/${leagueName}`);
@@ -42,21 +28,9 @@ export const fetchLeagueMatches = async (leagueName) => {
   }
 };
 
-/**
- * Submit predictions for a specific matchday of a league.
- * Payload example:
- * {
- *   matchday: "X",
- *   predictions: {
- *      "Team A vs Team B": [2, 1],
- *      ...
- *   }
- * }
- */
 export const submitPredictions = async (leagueName, payload) => {
   try {
     const response = await axios.post(`${BASE_URL}/api/predict/${leagueName}`, payload);
-    // Returns table after merging played results + submitted predictions
     return response.data;
   } catch (err) {
     console.error("Error submitting predictions:", err);
@@ -64,10 +38,6 @@ export const submitPredictions = async (leagueName, payload) => {
   }
 };
 
-/**
- * Download the PDF of the league table.
- * Uses the last calculated table from backend (after submitPredictions)
- */
 export const downloadLeaguePDF = async (leagueName) => {
   try {
     const response = await axios({
@@ -82,10 +52,6 @@ export const downloadLeaguePDF = async (leagueName) => {
   }
 };
 
-/**
- * Force refresh data from web scraping.
- * Updates local JSON cache and Pinata IPFS with latest played/unplayed matches.
- */
 export const refreshLeagueData = async (leagueName) => {
   try {
     const response = await axios.post(`${BASE_URL}/api/refresh/${leagueName}`);
@@ -96,10 +62,6 @@ export const refreshLeagueData = async (leagueName) => {
   }
 };
 
-/**
- * Get current status of the league without fetching full match data.
- * Useful to check how many matches are played, next matchday, last scraped timestamp.
- */
 export const getLeagueStatus = async (leagueName) => {
   try {
     const response = await axios.get(`${BASE_URL}/api/status/${leagueName}`);
