@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      args:
+        BACKEND_PORT: ${BACKEND_PORT:-8000}
+    container_name: prediction_backend
+    ports:
+      - "${BACKEND_PORT:-8000}:${BACKEND_PORT:-8000}" 
+    environment:
+      - BACKEND_PORT=${BACKEND_PORT:-8000}
+      - ENV=${ENV:-development}
+      - PINATA_API_KEY=${PINATA_API_KEY}
+      - PINATA_SECRET_API_KEY=${PINATA_SECRET_API_KEY}
+      - CACHE_DIR=/app/cache
+      # Add CORS origins for Codespaces
+      - FRONTEND_URL=${URL:-http://localhost:5173}
+    volumes:
+      - ./backend:/app
+      - ./backend/cache:/app/cache
+    networks:
+      - prediction-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # Use environment variable from .env
+        VITE_API_URL: ${VITE_API_URL}
+    container_name: prediction_frontend
+    ports:
+      - "${FRONTEND_PORT:-5173}:5173"
+    environment:
+      # Pass the backend URL to the container
+      - VITE_API_URL=${VITE_API_URL}
+      - FRONTEND_PORT=5173
+    depends_on:
+      - backend
+    networks:
+      - prediction-network
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules        
+
+networks:
+  prediction-network:
+    driver: bridge

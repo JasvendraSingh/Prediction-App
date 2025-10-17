@@ -1,0 +1,24 @@
+npm-debug.log
+coverage
+.nyc_output
+.venv
+.git
+.gitignore
+.vscode
+.idea
+.DS_Store
+*.pyc
+node_modules
+dist
+build
+coverage
+*.log
+.env
+.env.*  
+Dockerfile
+docker-compose.yml
+*.md
+# Ignore tests output folder
+tests/output/
+cache/
+**/__pycache__/
