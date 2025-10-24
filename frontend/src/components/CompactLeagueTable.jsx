@@ -19,12 +19,12 @@ const CompactLeagueTable = ({ tableData, league, playedResultsCount }) => {
       sx={{
         borderRadius: 4,
         boxShadow: `0 20px 40px rgba(${
-          league === "UEL" ? "255,152,0" : "0,255,136"
+          league === "UCL" ? "27,0,148" : "UEL" ? "255,152,0" : "0,255,136"
         }, 0.3)`,
         background: "rgba(0,0,0,0.8)",
         backdropFilter: "blur(20px)",
         border: `1px solid rgba(${
-          league === "UEL" ? "255,152,0" : "0,255,136"
+          league === "UCL" ? "27,0,148" : "UEL" ? "255,152,0" : "0,255,136"
         }, 0.2)`,
         position: "sticky",
         top: 20,

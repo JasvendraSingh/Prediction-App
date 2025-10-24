@@ -4,7 +4,7 @@ def parse_predictions(matches, predictions_json, league: str):
     """
     matches: list of (home, away) tuples
     predictions_json: dict of "Home_vs_Away": "score-score"
-    league: str ("UEL" or "UCFL")
+    league: str ("UCL" or "UEL" or "UCFL")
     """
     if league not in league_progress:
         league_progress[league] = {}

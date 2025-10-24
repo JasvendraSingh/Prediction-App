@@ -107,6 +107,8 @@ def scrape_matches(url: str, cache_file: str, ipfs_name: str, force_refresh=Fals
         table_id = "sched_2025-2026_882_2"  # UCFL
     elif "19" in url:
         table_id = "sched_2025-2026_19_2"   # UEL
+    elif "8" in url:
+        table_id = "sched_2025-2026_8_2"   # UCL
     else:
         table_id = None
     # Find table
@@ -190,6 +192,12 @@ def scrape_matches(url: str, cache_file: str, ipfs_name: str, force_refresh=Fals
     except Exception as e:
         print(f"  Failed to push to IPFS: {e}")
     return matches_by_day
+
+def scrape_ucl(force_refresh=False):
+    url = "https://fbref.com/en/comps/8/schedule/Champions-League-Scores-and-Fixtures"
+    cache_file = "ucl_matches.json"
+    ipfs_name = "UCL_matches"
+    return scrape_matches(url, cache_file, ipfs_name, force_refresh=force_refresh)
 
 def scrape_uel(force_refresh=False):
     url = "https://fbref.com/en/comps/19/schedule/Europa-League-Scores-and-Fixtures"

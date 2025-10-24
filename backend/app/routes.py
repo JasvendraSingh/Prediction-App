@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse, FileResponse
-from .scraping import scrape_uel, scrape_ucfl
+from .scraping import scrape_ucl, scrape_uel, scrape_ucfl
 from .predictions import parse_predictions, league_progress
 from .league import calculate_league_table, format_table_for_frontend
 from .pdf_utils import export_to_pdf
@@ -10,7 +10,9 @@ router = APIRouter()
 last_tables = {}  # cache for PDF export
 
 def get_matches_for_league(league: str, force_refresh: bool = False):
-    if league.lower() == "uel":
+    if league.lower() == "ucl":
+        return scrape_ucl(force_refresh=force_refresh)
+    elif league.lower() == "uel":
         return scrape_uel(force_refresh=force_refresh)
     elif league.lower() == "ucfl":
         return scrape_ucfl(force_refresh=force_refresh)
@@ -41,7 +43,7 @@ def get_matches(league: str):
     matches_by_day = get_matches_for_league(league)
     if matches_by_day is None:
         return JSONResponse(
-            {"error": "Invalid league. Use 'UEL' or 'UCFL'."},
+            {"error": "Invalid league. Use 'UCL' or 'UEL' or 'UCFL'."},
             status_code=400)
     league_upper = league.upper()
     # Get all played matches
@@ -132,7 +134,7 @@ def refresh_data(league: str):
     print(f"Pinata Secret Key: {os.getenv('PINATA_SECRET_API_KEY')[:10]}..." if os.getenv('PINATA_SECRET_API_KEY') else "NOT SET")
     matches_by_day = get_matches_for_league(league, force_refresh=True)
     if matches_by_day is None:
-        return JSONResponse({"error": "Invalid league. Use 'UEL' or 'UCFL'."}, status_code=400)
+        return JSONResponse({"error": "Invalid league. Use 'UCL' or 'UEL' or 'UCFL'."}, status_code=400)
     league_upper = league.upper()
     # Reset league progress with new real results
     real_results = apply_real_results(matches_by_day)

@@ -17,21 +17,26 @@ const PredictionCard = ({
   const [showError, setShowError] = React.useState(false);
   const formRef = useRef(null);
 
+  // Helper to get RGB for league-based backgrounds
+  const getLeagueRGB = () => {
+    if (league === "UCL") return "27,0,148";
+    if (league === "UEL") return "255,152,0";
+    if (league === "UCFL") return "0,255,136";
+    return "0,0,0";
+  };
+
+  const leagueRGB = getLeagueRGB();
+
   const handleNextClick = async () => {
-    // Get validation state directly from form ref
     if (formRef.current) {
       const { allFilled, scrollToUnfilled } = formRef.current;
-
       if (!allFilled) {
-        // Show error message
         setShowError(true);
         scrollToUnfilled();
         setTimeout(() => setShowError(false), 4000);
         return;
       }
     }
-
-    // Proceed with submission
     setShowError(false);
     await onSubmit();
   };
@@ -47,14 +52,10 @@ const PredictionCard = ({
     <Card
       sx={{
         borderRadius: 4,
-        boxShadow: `0 20px 40px rgba(${
-          league === "UEL" ? "255,152,0" : "0,255,136"
-        }, 0.3)`,
-        background: "rgba(0,0,0,0.8)",
+        boxShadow: `0 20px 40px rgba(${leagueRGB}, 0.3)`,
+        background: `rgba(0,0,0,0.8)`,
         backdropFilter: "blur(20px)",
-        border: `1px solid rgba(${
-          league === "UEL" ? "255,152,0" : "0,255,136"
-        }, 0.2)`,
+        border: `1px solid rgba(${leagueRGB}, 0.2)`,
       }}
     >
       <CardHeader
@@ -84,12 +85,12 @@ const PredictionCard = ({
             severity="warning"
             sx={{
               mb: 3,
-              backgroundColor: "rgba(255,152,0,0.1)",
-              border: "1px solid #ff9800",
+              backgroundColor: `rgba(${leagueRGB}, 0.1)`,
+              border: `1px solid ${leagueColors[league] || "#ff9800"}`,
               color: "#ffb74d",
               borderRadius: 2,
               "& .MuiAlert-icon": {
-                color: "#ff9800",
+                color: leagueColors[league] || "#ff9800",
               },
             }}
           >
@@ -119,9 +120,7 @@ const PredictionCard = ({
             color: "white",
             "&:hover": {
               borderColor: leagueColors[league] || "#00ff88",
-              backgroundColor: `rgba(${
-                league === "UEL" ? "255,152,0" : "0,255,136"
-              }, 0.1)`,
+              backgroundColor: `rgba(${leagueRGB}, 0.1)`,
             },
             "&:disabled": {
               borderColor: "rgba(255,255,255,0.1)",

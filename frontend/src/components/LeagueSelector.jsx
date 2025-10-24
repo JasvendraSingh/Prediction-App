@@ -3,20 +3,24 @@ import { Card, CardHeader, CardContent, Typography, Box } from "@mui/material";
 import { leagueColors } from "../constants/leagueConstants";
 
 const LeagueSelector = ({ league, onLeagueChange }) => {
+  // Determine color based on league
+  const getLeagueRGBA = () => {
+    if (league === "UCL") return "27,0,148";
+    if (league === "UEL") return "255,152,0";
+    if (league === "UCFL") return "0,255,136";
+    return "0,0,0";
+  };
+
+  const rgbaColor = getLeagueRGBA();
+
   return (
     <Card
       sx={{
         borderRadius: 4,
-        boxShadow: `0 20px 40px rgba(${
-          league === "UEL" ? "255,152,0" : league === "UCFL" ? "0,255,136" : "0,0,0"
-        }, 0.3)`,
-        background: `linear-gradient(135deg, rgba(${
-          league === "UEL" ? "255,152,0" : league === "UCFL" ? "0,255,136" : "0,0,0"
-        }, 0.1), rgba(0,0,0,0.8))`,
+        boxShadow: `0 20px 40px rgba(${rgbaColor}, 0.3)`,
+        background: `linear-gradient(135deg, rgba(${rgbaColor}, 0.1), rgba(0,0,0,0.8))`,
         backdropFilter: "blur(20px)",
-        border: `2px solid rgba(${
-          league === "UEL" ? "255,152,0" : league === "UCFL" ? "0,255,136" : "255,255,255"
-        }, 0.3)`,
+        border: `2px solid rgba(${rgbaColor}, 0.3)`,
         position: "absolute",
         top: 0,
         left: 20,
@@ -27,9 +31,9 @@ const LeagueSelector = ({ league, onLeagueChange }) => {
     >
       <CardHeader
         title={
-          <Typography 
-            variant="subtitle1" 
-            sx={{ 
+          <Typography
+            variant="subtitle1"
+            sx={{
               color: league ? leagueColors[league] : "white",
               fontWeight: 700,
               transition: "color 0.3s ease",
@@ -84,6 +88,7 @@ const LeagueSelector = ({ league, onLeagueChange }) => {
           <option disabled value="">
             Choose League
           </option>
+          <option value="UCL">UEFA Champions League</option>
           <option value="UEL">UEFA Europa League</option>
           <option value="UCFL">UEFA Conference League</option>
         </Box>
