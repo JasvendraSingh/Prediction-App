@@ -16,8 +16,6 @@ const PredictionCard = ({
 }) => {
   const [showError, setShowError] = React.useState(false);
   const formRef = useRef(null);
-
-  // Helper to get RGB for league-based backgrounds
   const getLeagueRGB = () => {
     if (league === "UCL") return "27,0,148";
     if (league === "UEL") return "255,152,0";

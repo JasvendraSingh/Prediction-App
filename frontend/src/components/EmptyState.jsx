@@ -11,7 +11,7 @@ const EmptyState = ({ league, playedResultsCount, totalMatchdays }) => {
         backgroundColor: "rgba(0,0,0,0.6)",
         borderRadius: 3,
         border: `1px solid rgba(${
-          league === "UCL" ? "27,0,148" : "UEL" ? "255,152,0" : "0,255,136"
+          league === "UCL" ? "27,0,148" : league === "UEL" ? "255,152,0" : "0,255,136"
         }, 0.3)`,
       }}
     >

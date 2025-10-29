@@ -10,12 +10,12 @@ const ResultTableCard = ({ table, league, playedResultsCount, onDownload, onRese
         mb: 4,
         borderRadius: 4,
         boxShadow: `0 20px 40px rgba(${
-          league === "UCL" ? "27,0,148" : "UEL" ? "255,152,0" : "0,255,136"
+          league === "UCL" ? "27,0,148" : league === "UEL" ? "255,152,0" : "0,255,136"
         }, 0.3)`,
         background: "rgba(0,0,0,0.8)",
         backdropFilter: "blur(20px)",
         border: `1px solid rgba(${
-          league === "UCL" ? "27,0,148" : "UEL" ? "255,152,0" : "0,255,136"
+          league === "UCL" ? "27,0,148" : league === "UEL" ? "255,152,0" : "0,255,136"
         }, 0.2)`,
       }}
     >
@@ -71,7 +71,7 @@ const ResultTableCard = ({ table, league, playedResultsCount, onDownload, onRese
             "&:hover": {
               borderColor: leagueColors[league] || "#00ff88",
               backgroundColor: `rgba(${
-                league === "UCL" ? "27,0,148" : "UEL" ? "255,152,0" : "0,255,136"
+                league === "UCL" ? "27,0,148" : league === "UEL" ? "255,152,0" : "0,255,136"
               }, 0.1)`,
             },
           }}
