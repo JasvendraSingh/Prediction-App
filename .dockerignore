@@ -22,3 +22,7 @@ docker-compose.yml
 tests/output/
 cache/
 **/__pycache__/
+tests/log.html
+tests/output.xml
+tests/report.html
+browser

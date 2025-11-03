@@ -20,3 +20,7 @@ tests/output/
 cache/
 **/__pycache__/.env
 .env
+tests/log.html
+tests/output.xml
+tests/report.html
+browser
