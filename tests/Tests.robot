@@ -24,7 +24,7 @@ Full Prediction Flow Test
     [Tags]             Regression
     [Documentation]    Test the complete prediction flow for UCFL
     Select UCFL League
-    UCFL Prediction Flow
+    Prediction Flow
     Verify Final Table
 
 Back Button Test
@@ -47,17 +47,32 @@ PDF Download Button After Prediction
     [Tags]             Unit
     [Documentation]    Test PDF generation & download after submission
     Select UCFL League
-    UCFL Prediction Flow
+    Prediction Flow
     Click    xpath=//button[contains(., 'Download PDF')]
     Sleep    2s
-    Take Screenshot
 
 Test Predict Again Button
     [Tags]             Unit
     [Documentation]    Test the reset functionality
     Select UCFL League
-    UCFL Prediction Flow
+    Prediction Flow
     Click    xpath=//button[contains(., 'Predict Again')]
     Sleep    2s
-    Wait For Elements State    css=.MuiBox-root    visible
+    Take Screenshot
+
+Test Prediction in every League
+    [Tags]             Integration
+    [Documentation]    Test the prediction feature for each of the 3 leagues with random entries
+    Select UCFL League
+    Prediction Flow
+    Take Screenshot
+    Click    xpath=//button[contains(., 'Predict Again')]
+    Sleep    2s
+    Select UEL League
+    Prediction Flow
+    Take Screenshot
+    Click    xpath=//button[contains(., 'Predict Again')]
+    Sleep    2s
+    Select UCL League
+    Prediction Flow
     Take Screenshot

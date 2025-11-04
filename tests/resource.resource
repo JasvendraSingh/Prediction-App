@@ -62,7 +62,6 @@ Click Next Button
 
 Click Next Or Finish
     [Arguments]    ${index}    ${matchday_count}
-    Log To Console    Handling Matchday ${index}/${matchday_count}
     ${next_exists}=    Run Keyword And Return Status
     ...    Wait For Elements State    xpath=//button[contains(., 'Next Matchday')]    visible    timeout=3s
     ${finish_exists}=    Run Keyword And Return Status
@@ -86,8 +85,8 @@ Click Next Or Finish
         Fail    No Next or Finish button found on matchday ${index}
     END
 
-UCFL Prediction Flow
-    [Documentation]    Complete prediction flow for UCFL with random scores
+Prediction Flow
+    [Documentation]    Complete prediction flow with random scores
     ${matchday_count}=    Get Matchday Count
     FOR    ${index}    IN RANGE    1    ${matchday_count + 1}
         Log    Processing Matchday ${index}/${matchday_count}
@@ -110,3 +109,16 @@ Verify Final Table
     ${row_count}=    Get Length    ${rows}
     Should Be True    ${row_count} > 0
     Log To Console    Final League Table displayed with ${row_count} teams
+
+Select UEL League
+    Wait For Elements State    css=select.MuiBox-root    visible    timeout=10s
+    Click    css=.MuiCard-root select
+    Select Options By    css=select.MuiBox-root    value    UEL    
+    Sleep    1s
+
+Select UCL League
+    Wait For Elements State    css=select.MuiBox-root    visible    timeout=10s
+    Click    css=.MuiCard-root select
+    Select Options By    css=select.MuiBox-root    value    UCL    
+    Sleep    1s    
+
