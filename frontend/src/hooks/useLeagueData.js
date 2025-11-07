@@ -13,6 +13,15 @@ export const useLeagueData = (league) => {
   const [totalMatchdays, setTotalMatchdays] = useState(0);
   const [loading, setLoading] = useState(false);
 
+  // ✅ Auto-persist predictions locally
+  useEffect(() => {
+    if (league && Object.keys(predictions).length > 0) {
+      const username = localStorage.getItem("username") || "guest";
+      const key = `predictions_${username}_${league}`;
+      localStorage.setItem(key, JSON.stringify(predictions));
+    }
+  }, [predictions, league]);
+
   useEffect(() => {
     if (!league) return;
 
@@ -31,22 +40,12 @@ export const useLeagueData = (league) => {
         setTable(null);
         setPredictions({});
 
-        if (response.completed_table) {
-          setInitialTable(response.completed_table);
-        }
-        if (response.first_unplayed_matchday) {
-          setFirstUnplayedMatchday(response.first_unplayed_matchday);
-        }
-        if (response.played_results) {
-          setPlayedResultsCount(Object.keys(response.played_results).length);
-        }
-        if (response.total_matchdays) {
-          setTotalMatchdays(response.total_matchdays);
-        }
+        if (response.completed_table) setInitialTable(response.completed_table);
+        if (response.first_unplayed_matchday) setFirstUnplayedMatchday(response.first_unplayed_matchday);
+        if (response.played_results) setPlayedResultsCount(Object.keys(response.played_results).length);
+        if (response.total_matchdays) setTotalMatchdays(response.total_matchdays);
       })
-      .catch((err) => {
-        console.error("Error fetching league data:", err);
-      })
+      .catch((err) => console.error("Error fetching league data:", err))
       .finally(() => setLoading(false));
   }, [league]);
 
