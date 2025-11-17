@@ -1,0 +1,60 @@
+name: Test and Deploy
+
+on:
+  push:
+    branches: [ main, feature ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # Run Tests Job
+  tests:
+    name: Run Docker Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Run docker-compose tests
+        run: |
+          docker compose -f docker-compose.test.yml up --build --exit-code-from tests
+
+      - name: Cleanup
+        if: always()
+        run: docker compose -f docker-compose.test.yml down
+
+  # Deploy Backend Job
+  deploy_backend:
+    name: Deploy Backend to Render
+    runs-on: ubuntu-latest
+    needs: tests
+    if: github.ref == 'refs/heads/main'  # Deploy only on main pushes
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Trigger Backend Deploy
+        run: |
+          echo "Deploying backend..."
+          curl -X POST ${{ secrets.RENDER_BACKEND_HOOK }}
+
+  # Deploy Frontend Job
+  deploy_frontend:
+    name: Deploy Frontend to Render
+    runs-on: ubuntu-latest
+    needs: deploy_backend
+    if: github.ref == 'refs/heads/main'  # Deploy only on main pushes
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Trigger Frontend Deploy
+        run: |
+          echo "Deploying frontend..."
+          curl -X POST ${{ secrets.RENDER_FRONTEND_HOOK }}
