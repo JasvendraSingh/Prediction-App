@@ -3,10 +3,10 @@ version: "3.9"
 services:
   test:
     build:
-      context: ./tests        
+      context: ./tests
       dockerfile: Dockerfile
     environment:
       - ROBOT_BROWSER_HEADLESS=True
     volumes:
-      - ./tests/output:/app/output   
-    command: robot --outputdir /app/output *.robot
+      - ./tests/output:/app/output
+    command: []   # entrypoint.sh handles running Robot

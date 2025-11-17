@@ -2,8 +2,8 @@
 Library        Browser
 
 *** Variables ***
-${URL}            https://cuddly-space-lamp-5gpv5r69p7j9fvpr9-5173.app.github.dev
-${BACKEND_URL}    https://cuddly-space-lamp-5gpv5r69p7j9fvpr9-8000.app.github.dev
+${URL}            http://frontend:5173
+${BACKEND_URL}    http://backend:8000
 
 *** Keywords ***
 Open Browser To App
