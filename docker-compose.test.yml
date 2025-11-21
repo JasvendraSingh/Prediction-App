@@ -10,3 +10,11 @@ services:
     volumes:
       - ./tests/output:/app/output
     command: []   # entrypoint.sh handles running Robot
+    networks:
+      - prediction-network
+    depends_on:
+      - frontend
+      - backend
+
+networks:
+  prediction-network:
