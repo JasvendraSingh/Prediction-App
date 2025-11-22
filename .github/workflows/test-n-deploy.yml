@@ -56,11 +56,12 @@ jobs:
     name: Deploy Backend to Render
     runs-on: ubuntu-latest
     needs: test
-
+    if: always()
+  
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
+  
       - name: Trigger Backend Deploy
         env:
           RENDER_BACKEND_HOOK: ${{ secrets.RENDER_BACKEND_HOOK }}
@@ -68,16 +69,16 @@ jobs:
           echo "Deploying backend..."
           curl -X POST "$RENDER_BACKEND_HOOK"
 
-
   deploy_frontend:
     name: Deploy Frontend to Render
     runs-on: ubuntu-latest
     needs: deploy_backend
-
+    if: always()
+  
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
+  
       - name: Trigger Frontend Deploy
         env:
           RENDER_FRONTEND_HOOK: ${{ secrets.RENDER_FRONTEND_HOOK }}
