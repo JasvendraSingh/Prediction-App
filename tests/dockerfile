@@ -39,7 +39,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install robotframework-browser
 
 # Copy tests
-COPY ./*.robot ./
+COPY . /app
 
 # Copy runtime chromium install script
 COPY entrypoint.sh /entrypoint.sh
