@@ -29,6 +29,14 @@ Handle Codespace Port
     END
     Log    No interstitial found (or already accepted)
 
+User Login
+    [Documentation]    Fill username input and click Enter button on login page
+    Wait For Elements State    css=input[label="Enter Username"]    visible    timeout=5s
+    Fill Text    css=input[label="Enter Username"]    Jin
+    Sleep    1s
+    Click    xpath=//button[contains(., 'Enter')]
+    Sleep    2s
+
 Select UCFL League
     Wait For Elements State    css=select.MuiBox-root    visible    timeout=10s
     Click    css=.MuiCard-root select
