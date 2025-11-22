@@ -14,14 +14,7 @@ import { leagueColors } from "../constants/leagueConstants";
 
 const ResultTableCard = ({ table, league, playedResultsCount, onDownload, onReset }) => {
   const handleDownload = async () => {
-    try {
-      const username = localStorage.getItem("username") || "guest";
-      const key = `predictions_${username}_${league}`;
-      const savedPreds = JSON.parse(localStorage.getItem(key) || "{}");
-      await onDownload(savedPreds);
-    } catch (err) {
-      console.error("Error including saved predictions:", err);
-    }
+      await onDownload();
   };
 
   return (

@@ -16,10 +16,7 @@ router = APIRouter()
 last_tables: Dict[str, Any] = {}
 last_predictions: Dict[str, Any] = {}
 
-# ---------------------------
 # Helper Functions
-# ---------------------------
-
 def get_matches_for_league(league: str, force_refresh: bool = False):
     league = league.lower()
     if league == "ucl":
@@ -46,10 +43,7 @@ def get_first_unplayed_matchday(matches_by_day):
             return matchday
     return None
 
-# ---------------------------
 # API Endpoints
-# ---------------------------
-
 @router.get("/matches/{league}")
 def get_matches(league: str):
     print(f"== Fetching matches for {league} ==")
@@ -97,9 +91,11 @@ def submit_predictions(league: str, payload: dict):
     if all(m["played"] for m in matches_by_day[matchday]):
         return JSONResponse({"error": "Matchday already played."}, status_code=400)
 
+    # Ensure real result state exists
     if league_upper not in league_progress:
         league_progress[league_upper] = apply_real_results(matches_by_day)
 
+    # Parse predictions into correct format
     new_predictions = parse_predictions(
         [(m["home"], m["away"]) for m in matches_by_day[matchday]],
         predictions,
@@ -107,31 +103,21 @@ def submit_predictions(league: str, payload: dict):
     )
     league_progress[league_upper].update(new_predictions)
 
+    # Update league table
     table_dict = calculate_league_table(matches_by_day, league_progress[league_upper])
     table_array = format_table_for_frontend(table_dict)
-    last_tables[league_upper] = table_dict
+    last_tables[league_upper] = table_array
 
-    # Save this matchday’s predictions to IPFS
-    prediction_key = f"{username}_{league_upper}_MD{matchday}"
-    save_to_ipfs({
-        "username": username,
+    return {
+        "status": "saved",
         "league": league_upper,
         "matchday": matchday,
-        "predictions": predictions,
         "table": table_array,
-        "timestamp": datetime.datetime.now().isoformat()
-    }, name=prediction_key)
-
-    # Store locally in memory
-    if league_upper not in last_predictions:
-        last_predictions[league_upper] = {}
-    last_predictions[league_upper][matchday] = predictions
-
-    return {"league": league_upper, "matchday": matchday, "table": table_array}
+    }
 
 @router.post("/save_predictions/{league}")
 def save_user_predictions(league: str, payload: dict):
-    """Save all predictions for a user to IPFS."""
+    """Save ALL predictions for a user to IPFS (single file)."""
     username = payload.get("username", "guest")
     predictions = payload.get("predictions")
 
@@ -170,27 +156,38 @@ def load_user_predictions(league: str, username: str = Query(...)):
 @router.get("/download/{league}")
 @router.post("/download/{league}")
 def download_pdf(league: str, payload: dict = None):
-    """Download league table with optional user predictions."""
+    """Download league table with optional user predictions from IPFS."""
     league_upper = league.upper()
     if league_upper not in last_tables:
         return JSONResponse({"error": "No data. Predict first."}, status_code=400)
 
+    # Now this is a list of dicts with keys matching the frontend
     table_data = last_tables[league_upper]
-    user_predictions = None
 
-    if payload and "predictions" in payload:
-        user_predictions = payload["predictions"]
-    elif payload and "username" in payload:
+    username = None
+    user_predictions = {}
+
+    if payload and "username" in payload:
         username = payload["username"]
+
+    if username:
         key = f"{username}_{league_upper}_all_predictions"
         cid = get_latest_cid(key)
         if cid:
             data = load_from_ipfs(cid)
             if data:
-                user_predictions = data.get("predictions")
+                user_predictions = data.get("predictions", {})
 
     filename = f"{league_upper}_table.pdf"
-    export_to_pdf(table_data, filename, predictions=user_predictions)
+    print("DEBUG RAW TABLE DATA:", table_data)
+
+    export_to_pdf(
+        table_data,
+        filename,
+        predictions=user_predictions,
+        username=username,
+        league=league_upper,
+    )
     return FileResponse(path=filename, filename=filename, media_type="application/pdf")
 
 @router.post("/refresh/{league}")
@@ -246,72 +243,6 @@ def reset_data():
 @router.get("/health")
 def health_check():
     return {"status": "ok"}
-
-
-# =======================================================
-# === Added for local storage and finalization ==========
-# =======================================================
-
-LOCAL_STORAGE = "storage"
-os.makedirs(LOCAL_STORAGE, exist_ok=True)
-
-def get_user_league_path(username: str, league: str):
-    return os.path.join(LOCAL_STORAGE, f"{username}_{league.upper()}.json")
-
-@router.post("/store_local/{league}")
-def store_local_predictions(league: str, payload: dict):
-    """Store predictions per matchday locally (before finalization)."""
-    username = payload.get("username", "guest")
-    matchday = payload.get("matchday")
-    predictions = payload.get("predictions", {})
-
-    if not matchday or not predictions:
-        raise HTTPException(status_code=400, detail="Missing matchday or predictions.")
-
-    path = get_user_league_path(username, league)
-    data = {}
-    if os.path.exists(path):
-        with open(path, "r") as f:
-            data = json.load(f)
-
-    data[matchday] = predictions
-
-    with open(path, "w") as f:
-        json.dump(data, f, indent=2)
-
-    return {"status": "saved", "stored_matchdays": list(data.keys())}
-
-@router.post("/finalize/{league}")
-def finalize_predictions(league: str, payload: dict):
-    """Combine all local matchday predictions, generate full PDF, upload once to IPFS."""
-    username = payload.get("username", "guest")
-    final_table = payload.get("final_table")
-
-    path = get_user_league_path(username, league)
-    if not os.path.exists(path):
-        raise HTTPException(status_code=404, detail="No local predictions found.")
-
-    with open(path, "r") as f:
-        all_predictions = json.load(f)
-
-    key = f"{username}_{league.upper()}_FINAL"
-    ipfs_data = {
-        "username": username,
-        "league": league.upper(),
-        "predictions": all_predictions,
-        "final_table": final_table,
-        "timestamp": datetime.datetime.now().isoformat()
-    }
-    cid = save_to_ipfs(ipfs_data, name=key)
-
-    # Generate combined PDF
-    filename = os.path.join(LOCAL_STORAGE, f"{username}_{league.upper()}_full.pdf")
-    export_to_pdf(final_table, filename, predictions=all_predictions)
-
-    # Clean up local after finalize
-    os.remove(path)
-
-    return {"status": "finalized", "cid": cid, "pdf_path": filename}
 
 @router.post("/logout")
 def logout_user(payload: dict):

@@ -1,77 +1,112 @@
-# backend/app/pdf_utils.py
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
-from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
+from reportlab.platypus import (
+    SimpleDocTemplate,
+    Paragraph,
+    Spacer,
+    PageBreak,
+    Table,
+    TableStyle,
+)
 from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
 
-def export_to_pdf(table_data: dict, filename: str, predictions: dict = None):
-    """
-    table_data: dict of teams with stats
-    predictions: dict of matchday -> match -> score
-    """
+styles = getSampleStyleSheet()
+title_style = styles["Title"]
+subtitle_style = styles["Heading2"]
+normal_style = styles["BodyText"]
 
-    # Sort by Points, then Goal Difference, then Team Name
-    standings = sorted(
-        table_data.items(),
-        key=lambda x: (x[1]["points"], x[1]["goal_difference"], x[0]),
-        reverse=True,
-    )
+# NORMALIZE MIXED-KEY ROWS
+def normalize_keys(row):
+    return {
+        "team": row["team"],
+        "played": row["played"],
+        "wins": row.get("wins", row.get("won", 0)),
+        "draws": row.get("draws", row.get("draw", 0)),
+        "loss": row.get("loss", row.get("lost", 0)),
+        "goals_for": row.get("goals_for", 0),
+        "goals_against": row.get("goals_against", 0),
+        "goal_diff": row.get("goal_diff", row.get("gd", 0)),
+        "points": row["points"],
+    }
 
+
+def export_to_pdf(table_data, filename, predictions=None, username=None, league=None):
     doc = SimpleDocTemplate(filename, pagesize=A4)
-    elements = []
-    styles = getSampleStyleSheet()
+    story = []
 
-    # Title
-    elements.append(Paragraph("Full Predictions Summary", styles["Title"]))
-    elements.append(Spacer(1, 20))
+    # HEADER
+    def add_header():
+        parts = []
+        if username:
+            parts.append(f"Predictions by: <b>{username}</b>")
+        if league:
+            parts.append(f"League: <b>{league}</b>")
+        if parts:
+            story.append(Paragraph(" | ".join(parts), normal_style))
+            story.append(Spacer(0, 6))
 
-    # Include all predictions first
+    # MATCHDAY PREDICTION PAGES
     if predictions:
-        for md, games in predictions.items():
-            elements.append(Paragraph(f"Matchday {md}", styles["Heading2"]))
-            match_list = []
-            for match, score in games.items():
-                # score can be dict or string depending on frontend format
-                if isinstance(score, dict):
-                    formatted = f"{score.get('homeScore', '')}-{score.get('awayScore', '')}"
-                else:
-                    formatted = str(score)
-                match_list.append([match, formatted])
-            t = Table(match_list, colWidths=[320, 80])
+        for matchday in sorted(predictions.keys(), key=lambda x: int(x)):
+            add_header()
+            story.append(Paragraph(f"Matchday {matchday} Predictions", title_style))
+            story.append(Spacer(0, 12))
+
+            rows = [["Match", "Prediction"]]
+            day_preds = predictions[matchday]
+
+            for match, score in day_preds.items():
+                home, away = match.split("_vs_")
+                rows.append([f"{home} vs {away}", score])
+
+            t = Table(rows, colWidths=[250, 100])
             t.setStyle(TableStyle([
-                ("GRID", (0, 0), (-1, -1), 0.3, colors.grey),
-                ("BACKGROUND", (0, 0), (-1, -1), colors.whitesmoke),
+                ("BACKGROUND", (0, 0), (-1, 0), colors.lightgrey),
+                ("BOX", (0, 0), (-1, -1), 1, colors.black),
+                ("GRID", (0, 0), (-1, -1), 0.5, colors.grey),
+                ("FONTSIZE", (0, 0), (-1, -1), 10),
             ]))
-            elements.append(t)
-            elements.append(Spacer(1, 12))
-        elements.append(Spacer(1, 20))
 
-    # Add final table
-    elements.append(Paragraph("Final League Table", styles["Heading1"]))
-    elements.append(Spacer(1, 10))
+            story.append(t)
+            story.append(PageBreak())
 
-    data = [["Pos", "Team", "P", "W", "D", "L", "GD", "Pts"]]
-    for idx, (team, stats) in enumerate(standings, start=1):
-        data.append([
-            idx,
-            team,
-            stats["played"],
-            stats["won"],
-            stats["draw"],
-            stats["lost"],
-            stats["goal_difference"],
-            stats["points"],
+    # FINAL TABLE PAGES
+    add_header()
+
+    story.append(Paragraph("Final League Table", title_style))
+    story.append(Spacer(0, 12))
+
+    headers = ["Pos", "Team", "P", "W", "D", "L", "GF", "GA", "GD", "Pts"]
+    rows = [headers]
+
+    for i, row in enumerate(table_data, start=1):
+        r = normalize_keys(row)
+        rows.append([
+            i,
+            r["team"],
+            r["played"],
+            r["wins"],
+            r["draws"],
+            r["loss"],
+            r["goals_for"],
+            r["goals_against"],
+            r["goal_diff"],
+            r["points"],
         ])
 
-    t = Table(data, colWidths=[40, 120, 30, 30, 30, 30, 40, 40])
-    t.setStyle(TableStyle([
-        ("BACKGROUND", (0, 0), (-1, 0), colors.darkblue),
-        ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),
-        ("ALIGN", (0, 0), (-1, -1), "CENTER"),
-        ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
-        ("GRID", (0, 0), (-1, -1), 0.5, colors.grey),
-        ("BACKGROUND", (0, 1), (-1, -1), colors.beige),
-    ]))
+    chunk_size = 30
+    for start in range(0, len(rows), chunk_size):
+        chunk = rows[start:start + chunk_size]
 
-    elements.append(t)
-    doc.build(elements)
+        t = Table(chunk, colWidths=[20, 130, 20, 20, 20, 20, 25, 25, 25, 25])
+        t.setStyle(TableStyle([
+            ("BACKGROUND", (0, 0), (-1, 0), colors.lightgrey),
+            ("BOX", (0, 0), (-1, -1), 1, colors.black),
+            ("GRID", (0, 0), (-1, -1), 0.5, colors.grey),
+            ("FONTSIZE", (0, 0), (-1, -1), 9),
+        ]))
+
+        story.append(t)
+        story.append(PageBreak())
+
+    doc.build(story)

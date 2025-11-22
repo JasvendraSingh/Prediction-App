@@ -13,7 +13,7 @@ import {
   leagueFullNames,
   backgroundGradients,
 } from "../constants/leagueConstants";
-import { downloadLeaguePDF } from "../api/leaguesApi";
+import { downloadLeaguePDF, saveAllPredictionsToIPFS } from "../api/leaguesApi";
 import LeagueSelector from "../components/LeagueSelector";
 import PredictionCard from "../components/PredictionCard";
 import CompactLeagueTable from "../components/CompactLeagueTable";
@@ -24,8 +24,8 @@ const HomePage = () => {
   const [league, setLeague] = useState("");
   const [updatedTable, setUpdatedTable] = useState(null);
   const [finalTable, setFinalTable] = useState(null);
-  const [username, setUsername] = useState(""); // 🧑 Username state
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // 🔐 Login state
+  const [username, setUsername] = useState(""); //  Username state
+  const [isLoggedIn, setIsLoggedIn] = useState(false); //  Login state
 
   const {
     matchdays,
@@ -67,6 +67,10 @@ const HomePage = () => {
       console.log("Not all predictions filled");
       return;
     }
+    setPredictions((prev) => ({
+      ...prev,
+      [currentMatchday]: currentPreds
+    }));
 
     const result = await handlePredictions(currentPreds);
 
@@ -78,6 +82,17 @@ const HomePage = () => {
     if (isLastMatchday) {
       if (result?.table) {
         setFinalTable(result.table);
+
+        //Upload all predictions once to IPFS
+        const storedUsername = localStorage.getItem("username") || username || "guest";
+        const key = `predictions_${storedUsername}_${league.toUpperCase()}`;
+        const allPreds = JSON.parse(localStorage.getItem(key) || "{}");
+
+        try {
+          await saveAllPredictionsToIPFS(league.toLowerCase(), storedUsername, allPreds);
+        } catch (e) {
+          console.error("Failed to save all predictions to IPFS:", e);
+        }
       }
     } else {
       handleNavigate("next");
@@ -87,7 +102,11 @@ const HomePage = () => {
   const handleDownload = async () => {
     if (!league) return;
     try {
-      const pdfBlob = await downloadLeaguePDF(league.toLowerCase());
+      const storedUsername = localStorage.getItem("username") || username || "guest";
+      const pdfBlob = await downloadLeaguePDF(
+        league.toLowerCase(),
+        { username: storedUsername }   // backend uses this to load from IPFS
+      );
       const url = window.URL.createObjectURL(
         new Blob([pdfBlob], { type: "application/pdf" })
       );
@@ -110,7 +129,10 @@ const HomePage = () => {
   };
 
   const handleLogin = () => {
+    const trimmed = username.trim();
     if (username.trim() !== "") {
+      localStorage.setItem("username", trimmed);
+      setUsername(trimmed);
       setIsLoggedIn(true);
     }
   };
@@ -118,6 +140,7 @@ const HomePage = () => {
   const handleLogout = () => {
     setIsLoggedIn(false);
     setUsername("");
+    localStorage.removeItem("username"); 
     handleResetAll();
   };
 
@@ -129,7 +152,7 @@ const HomePage = () => {
     return backgroundGradients[league] || backgroundGradients.default;
   };
 
-  // 🧠 Show login page first
+  //  Show login page first
   if (!isLoggedIn) {
     return (
       <Box
@@ -211,7 +234,7 @@ const HomePage = () => {
     );
   }
 
-  // 🏟️ Main Page after login
+  //  Main Page after login
   return (
     <Box
       sx={{

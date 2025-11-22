@@ -13,11 +13,11 @@ export const useLeagueData = (league) => {
   const [totalMatchdays, setTotalMatchdays] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  // ✅ Auto-persist predictions locally
+  //  Auto-persist predictions per user/league
   useEffect(() => {
     if (league && Object.keys(predictions).length > 0) {
       const username = localStorage.getItem("username") || "guest";
-      const key = `predictions_${username}_${league}`;
+      const key = `predictions_${username}_${league.toUpperCase()}`;
       localStorage.setItem(key, JSON.stringify(predictions));
     }
   }, [predictions, league]);
@@ -58,7 +58,11 @@ export const useLeagueData = (league) => {
     try {
       const result = await submitPredictions(league, payload);
       setTable(result?.table || []);
-      setPredictions((prev) => ({ ...prev, [currentMatchday]: {} }));
+      // Keep predictions in state; don't wipe them out
+      setPredictions((prev) => ({
+        ...prev,
+        [currentMatchday]: formattedPredictions,
+      }));
       return result;
     } catch (err) {
       console.error("Error submitting predictions:", err);

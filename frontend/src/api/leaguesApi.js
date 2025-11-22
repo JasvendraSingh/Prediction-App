@@ -39,7 +39,6 @@ api.interceptors.response.use(
 );
 
 // Core API functions 
-
 export const fetchLeagueMatches = async (leagueName) => {
   try {
     const response = await api.get(`/api/matches/${leagueName}`);
@@ -59,9 +58,7 @@ export const fetchLeagueMatches = async (leagueName) => {
   }
 };
 
-
-//  Enhanced downloadLeaguePDF: optionally includes predictions 
-export const downloadLeaguePDF = async (leagueName, predictions = null) => {
+export const downloadLeaguePDF = async (leagueName, payload = null) => {
   try {
     let config = {
       url: `/api/download/${leagueName}`,
@@ -69,12 +66,11 @@ export const downloadLeaguePDF = async (leagueName, predictions = null) => {
       responseType: "blob",
     };
 
-    // If predictions provided, send via POST so backend can include them
-    if (predictions && Object.keys(predictions).length > 0) {
+    if (payload) {
       config = {
         url: `/api/download/${leagueName}`,
         method: "POST",
-        data: { predictions },
+        data: payload,   // <-- send username here
         responseType: "blob",
       };
     }
@@ -86,6 +82,12 @@ export const downloadLeaguePDF = async (leagueName, predictions = null) => {
     throw err;
   }
 };
+
+export const submitPredictions = async (leagueName, payload) => {
+  const response = await api.post(`/api/predict/${leagueName}`, payload);
+  return response.data;
+};
+
 
 export const refreshLeagueData = async (leagueName) => {
   try {
@@ -130,35 +132,6 @@ export async function saveUserPredictions(league, payload) {
 }
 
 // Pinata Upload Integration 
-
-export const uploadPredictionsToPinata = async (username, league, predictions) => {
-  const pinataJWT =
-    import.meta.env.VITE_PINATA_JWT || process.env.REACT_APP_PINATA_JWT;
-  const folderName = `${username}_${league}`;
-
-  const payload = {
-    pinataMetadata: {
-      name: `${folderName}_predictions.json`,
-      keyvalues: { username, league },
-    },
-    pinataContent: predictions,
-  };
-
-  const res = await fetch("https://api.pinata.cloud/pinning/pinJSONToIPFS", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${pinataJWT}`,
-    },
-    body: JSON.stringify(payload),
-  });
-
-  if (!res.ok) throw new Error("Pinata upload failed");
-  const data = await res.json();
-  console.log("Pinata upload successful:", data);
-  return data;
-};
-
 export const loadUserPredictionsFromIPFS = async (leagueName, username) => {
   try {
     const response = await api.get(`/api/load_predictions/${leagueName}`, {
@@ -171,31 +144,17 @@ export const loadUserPredictionsFromIPFS = async (leagueName, username) => {
   }
 };
 
+//SubmitPredictions to include username
 export const saveAllPredictionsToIPFS = async (leagueName, username, predictions) => {
   try {
     const response = await api.post(`/api/save_predictions/${leagueName}`, {
       username,
       predictions,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
     return response.data;
   } catch (err) {
     console.error("Error saving all predictions to IPFS:", err);
-    throw err;
-  }
-};
-
-//SubmitPredictions to include username
-export const submitPredictions = async (leagueName, payload) => {
-  try {
-    const username = localStorage.getItem("username") || "guest";
-    const response = await api.post(`/api/predict/${leagueName}`, {
-      ...payload,
-      username
-    });
-    return response.data;
-  } catch (err) {
-    console.error("Error submitting predictions:", err);
     throw err;
   }
 };
