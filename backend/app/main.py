@@ -1,37 +1,50 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import router
 import os
+
+from app.routes import router as uefa_router
+from app.fifa.routes import router as fifa2026_router  
 
 app = FastAPI(title="UEFA Predictor API")
 
-# Get frontend URL from environment or use defaults
-frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
+frontend_url = os.getenv("FRONTEND_URL") or os.getenv("URL") or "http://localhost:5173"
 
-origins = [
-    frontend_url,
-    "https://friendly-adventure-wrjvx564jjq42vq4v-5173.app.github.dev",
-    "http://localhost:5173",
-    "http://localhost:8000",
-    # Allow all Codespaces URLs
-    "https://*.app.github.dev",
-]
+cname = os.getenv("CODESPACE_NAME")
+domain = os.getenv("GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN")
 
-# CORS must be added BEFORE routes
-# Allow all origins for Codespaces (URLs change frequently)
+origins = set()
+
+origins.add(frontend_url.rstrip("/"))
+
+extra = os.getenv("ALLOWED_ORIGINS")
+if extra:
+    for o in extra.split(","):
+        if o.strip():
+            origins.add(o.strip().rstrip("/"))
+
+if cname and domain:
+    origins.add(f"https://{cname}-5173.{domain}")
+
+env = os.getenv("ENV", "production")
+if env != "production":
+    origins.add("http://localhost:5173")
+    origins.add("http://localhost:8000")
+
+if not origins:
+    origins.add("http://localhost:5173")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=list(origins),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
     expose_headers=["*"]
 )
 
-# API routes under /api
-app.include_router(router, prefix="/api")
+app.include_router(fifa2026_router, prefix="/api/fifa2026")  # <-- REQUIRED
+app.include_router(uefa_router, prefix="/api")
 
-# Add a health check endpoint at root
 @app.get("/")
 def health_check():
     return {"status": "ok", "message": "UEFA Predictor API is running"}

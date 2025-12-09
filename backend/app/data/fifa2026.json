@@ -1,0 +1,151 @@
+{
+  "groupStage": {
+    "groups": {
+      "A": ["Mexico", "South Africa", "South Korea", "UEFA Playoff D"],
+      "B": ["Canada", "UEFA Playoff A", "Qatar", "Switzerland"],
+      "C": ["Brazil", "Morocco", "Haiti", "Scotland"],
+      "D": ["United States", "Paraguay", "Australia", "UEFA Playoff C"],
+      "E": ["Germany", "Curaçao", "Côte d’Ivoire", "Ecuador"],
+      "F": ["Netherlands", "Japan", "UEFA Playoff B", "Tunisia"],
+      "G": ["Belgium", "Egypt", "Iran", "New Zealand"],
+      "H": ["Spain", "Cape Verde", "Saudi Arabia", "Uruguay"],
+      "I": ["France", "Senegal", "FIFA Playoff 2", "Norway"],
+      "J": ["Argentina", "Algeria", "Austria", "Jordan"],
+      "K": ["Portugal", "FIFA Playoff 1", "Uzbekistan", "Colombia"],
+      "L": ["England", "Croatia", "Ghana", "Panama"]
+    },
+    "points": { "win": 3, "draw": 1, "loss": 0 },
+    "tiebreakers": [
+      "points",
+      "goal_difference",
+      "goals_scored",
+      "head_to_head_points",
+      "head_to_head_goal_difference",
+      "head_to_head_goals",
+      "fair_play",
+      "drawing_of_lots"
+    ]
+  },
+
+  "playoffs": {
+    "FIFA_Playoff_1": {
+      "round1": [
+        { "match": "FP1-R1", "teamA": "New Caledonia", "teamB": "Jamaica" }
+      ],
+      "final": [
+        {
+          "match": "FP1-F",
+          "teamA": "",
+          "teamB": "DR Congo"
+        }
+      ],
+      "slot_name": "FIFA Playoff 1"
+    },
+
+    "FIFA_Playoff_2": {
+      "round1": [
+        { "match": "FP2-R1", "teamA": "Bolivia", "teamB": "Suriname" }
+      ],
+      "final": [
+        {
+          "match": "FP2-F",
+          "teamA": "",
+          "teamB": "Iraq"
+        }
+      ],
+      "slot_name": "FIFA Playoff 2"
+    },
+
+    "UEFA_Playoff_A": {
+      "semifinals": [
+        { "match": "UPA-SF1", "teamA": "Wales", "teamB": "Bosnia" },
+        { "match": "UPA-SF2", "teamA": "Italy", "teamB": "Northern Ireland" }
+      ],
+      "final": [
+        { "match": "UPA-F", "winnerOf1": "UPA-SF1", "winnerOf2": "UPA-SF2" }
+      ],
+      "slot_name": "UEFA Playoff A"
+    },
+
+    "UEFA_Playoff_B": {
+      "semifinals": [
+        { "match": "UPB-SF1", "teamA": "Ukraine", "teamB": "Sweden" },
+        { "match": "UPB-SF2", "teamA": "Poland", "teamB": "Albania" }
+      ],
+      "final": [
+        { "match": "UPB-F", "winnerOf1": "UPB-SF1", "winnerOf2": "UPB-SF2" }
+      ],
+      "slot_name": "UEFA Playoff B"
+    },
+
+    "UEFA_Playoff_C": {
+      "semifinals": [
+        { "match": "UPC-SF1", "teamA": "Slovakia", "teamB": "Kosovo" },
+        { "match": "UPC-SF2", "teamA": "Romania", "teamB": "Turkiye" }
+      ],
+      "final": [
+        { "match": "UPC-F", "winnerOf1": "UPC-SF1", "winnerOf2": "UPC-SF2" }
+      ],
+      "slot_name": "UEFA Playoff C"
+    },
+
+    "UEFA_Playoff_D": {
+      "semifinals": [
+        { "match": "UPD-SF1", "teamA": "Czechia", "teamB": "Ireland" },
+        { "match": "UPD-SF2", "teamA": "Denmark", "teamB": "North Macedonia" }
+      ],
+      "final": [
+        { "match": "UPD-F", "winnerOf1": "UPD-SF1", "winnerOf2": "UPD-SF2" }
+      ],
+      "slot_name": "UEFA Playoff D"
+    }
+  },
+
+  "knockouts": {
+    "round_of_32": [
+      { "73": "2A vs 2B" },
+      { "74": "1E vs best3rd(A,B,C,D,F)" },
+      { "75": "1F vs 2C" },
+      { "76": "1C vs 2F" },
+      { "77": "1I vs best3rd(C,D,F,G,H)" },
+      { "78": "2E vs 2I" },
+      { "79": "1A vs best3rd(C,E,F,H,I)" },
+      { "80": "1L vs best3rd(E,H,I,J,K)" },
+      { "81": "1D vs best3rd(B,E,F,I,J)" },
+      { "82": "1G vs best3rd(A,E,H,I,J)" },
+      { "83": "2K vs 2L" },
+      { "84": "1H vs 2J" },
+      { "85": "1B vs best3rd(E,F,G,I,J)" },
+      { "86": "1J vs 2H" },
+      { "87": "1K vs best3rd(D,E,I,J,L)" },
+      { "88": "2D vs 2G" }
+    ],
+
+    "round_of_16": [
+      "W73 vs W88",
+      "W74 vs W87",
+      "W75 vs W86",
+      "W76 vs W85",
+      "W77 vs W84",
+      "W78 vs W83",
+      "W79 vs W82",
+      "W80 vs W81"
+    ],
+
+    "quarterfinals": {
+      "QF1": "W73/88 vs W76/85",
+      "QF2": "W74/87 vs W77/84",
+      "QF3": "W75/86 vs W78/83",
+      "QF4": "W79/82 vs W80/81"
+    },
+
+    "semifinals": {
+      "SF1": "QF1 vs QF4",
+      "SF2": "QF2 vs QF3"
+    },
+
+    "third_place": "SF1_loser vs SF2_loser",
+
+    "final": "SF1_winner vs SF2_winner"
+  }
+}

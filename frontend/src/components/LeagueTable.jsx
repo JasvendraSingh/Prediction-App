@@ -9,6 +9,7 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
+import FifaFlag from "./FifaFlag";
 
 const LeagueTable = ({ tableData }) => {
   if (!tableData || tableData.length === 0) {
@@ -38,12 +39,22 @@ const LeagueTable = ({ tableData }) => {
           {tableData.map((row, index) => (
             <TableRow key={index}>
               <TableCell sx={{ color: "white" }}>{index + 1}</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: 600 }}>{row.team}</TableCell>
+
+              {/* ✅ Insert flags here — non-breaking for non-FIFA leagues */}
+              <TableCell sx={{ color: "white", fontWeight: 600 }}>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                  <FifaFlag team={row.team} size={20} />
+                  {row.team}
+                </span>
+              </TableCell>
+
               <TableCell sx={{ color: "white" }}>{row.played}</TableCell>
               <TableCell sx={{ color: "white" }}>{row.won}</TableCell>
               <TableCell sx={{ color: "white" }}>{row.draw}</TableCell>
               <TableCell sx={{ color: "white" }}>{row.lost}</TableCell>
-              <TableCell sx={{ color: "white" }}>{row.gd > 0 ? `+${row.gd}` : row.gd}</TableCell>
+              <TableCell sx={{ color: "white" }}>
+                {row.gd > 0 ? `+${row.gd}` : row.gd}
+              </TableCell>
               <TableCell sx={{ color: "white", fontWeight: 700 }}>{row.points}</TableCell>
             </TableRow>
           ))}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Box,
@@ -7,13 +7,17 @@ import {
   TextField,
   Button,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+
 import { useLeagueData } from "../hooks/useLeagueData";
 import {
   leagueColors,
   leagueFullNames,
   backgroundGradients,
 } from "../constants/leagueConstants";
+
 import { downloadLeaguePDF, saveAllPredictionsToIPFS } from "../api/leaguesApi";
+
 import LeagueSelector from "../components/LeagueSelector";
 import PredictionCard from "../components/PredictionCard";
 import CompactLeagueTable from "../components/CompactLeagueTable";
@@ -21,11 +25,14 @@ import ResultTableCard from "../components/ResultTableCard";
 import EmptyState from "../components/EmptyState";
 
 const HomePage = () => {
+  const navigate = useNavigate();
+
   const [league, setLeague] = useState("");
   const [updatedTable, setUpdatedTable] = useState(null);
   const [finalTable, setFinalTable] = useState(null);
-  const [username, setUsername] = useState(""); //  Username state
-  const [isLoggedIn, setIsLoggedIn] = useState(false); //  Login state
+
+  const [username, setUsername] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const {
     matchdays,
@@ -40,7 +47,13 @@ const HomePage = () => {
     loading,
     handlePredictions,
     handleReset,
-  } = useLeagueData(league);
+  } = useLeagueData(league === "fifa2026" ? null : league);
+
+  useEffect(() => {
+    if (league === "fifa2026") {
+      navigate("/fifa/playoffs");
+    }
+  }, [league, navigate]);
 
   const handleLeagueChange = (newLeague) => {
     setLeague(newLeague);
@@ -63,13 +76,12 @@ const HomePage = () => {
     const allFilled = Object.values(currentPreds).every(
       (pred) => pred && pred.homeScore !== "" && pred.awayScore !== ""
     );
-    if (!allFilled) {
-      console.log("Not all predictions filled");
-      return;
-    }
+
+    if (!allFilled) return;
+
     setPredictions((prev) => ({
       ...prev,
-      [currentMatchday]: currentPreds
+      [currentMatchday]: currentPreds,
     }));
 
     const result = await handlePredictions(currentPreds);
@@ -78,20 +90,25 @@ const HomePage = () => {
       setUpdatedTable(result.table);
     }
 
-    const isLastMatchday = currentDayIndex === matchdayKeys.length - 1;
-    if (isLastMatchday) {
+    const isLast = currentDayIndex === matchdayKeys.length - 1;
+
+    if (isLast) {
       if (result?.table) {
         setFinalTable(result.table);
+        const storedUsername =
+          localStorage.getItem("username") || username || "guest";
 
-        //Upload all predictions once to IPFS
-        const storedUsername = localStorage.getItem("username") || username || "guest";
         const key = `predictions_${storedUsername}_${league.toUpperCase()}`;
         const allPreds = JSON.parse(localStorage.getItem(key) || "{}");
 
         try {
-          await saveAllPredictionsToIPFS(league.toLowerCase(), storedUsername, allPreds);
+          await saveAllPredictionsToIPFS(
+            league.toLowerCase(),
+            storedUsername,
+            allPreds
+          );
         } catch (e) {
-          console.error("Failed to save all predictions to IPFS:", e);
+          console.error("Failed to save predictions:", e);
         }
       }
     } else {
@@ -101,12 +118,15 @@ const HomePage = () => {
 
   const handleDownload = async () => {
     if (!league) return;
+
     try {
-      const storedUsername = localStorage.getItem("username") || username || "guest";
-      const pdfBlob = await downloadLeaguePDF(
-        league.toLowerCase(),
-        { username: storedUsername }   // backend uses this to load from IPFS
-      );
+      const storedUsername =
+        localStorage.getItem("username") || username || "guest";
+
+      const pdfBlob = await downloadLeaguePDF(league.toLowerCase(), {
+        username: storedUsername,
+      });
+
       const url = window.URL.createObjectURL(
         new Blob([pdfBlob], { type: "application/pdf" })
       );
@@ -130,7 +150,7 @@ const HomePage = () => {
 
   const handleLogin = () => {
     const trimmed = username.trim();
-    if (username.trim() !== "") {
+    if (trimmed !== "") {
       localStorage.setItem("username", trimmed);
       setUsername(trimmed);
       setIsLoggedIn(true);
@@ -140,7 +160,7 @@ const HomePage = () => {
   const handleLogout = () => {
     setIsLoggedIn(false);
     setUsername("");
-    localStorage.removeItem("username"); 
+    localStorage.removeItem("username");
     handleResetAll();
   };
 
@@ -152,7 +172,6 @@ const HomePage = () => {
     return backgroundGradients[league] || backgroundGradients.default;
   };
 
-  //  Show login page first
   if (!isLoggedIn) {
     return (
       <Box
@@ -160,165 +179,109 @@ const HomePage = () => {
           minHeight: "100vh",
           background: getBgColor(),
           display: "flex",
-          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
+          flexDirection: "column",
           textAlign: "center",
-          position: "relative",
-          overflow: "hidden",
-          "&::before": {
-            content: '""',
-            position: "absolute",
-            top: 0,
-            right: 0,
-            width: "50%",
-            height: "100%",
-            background: `repeating-conic-gradient(from 0deg at 50% 50%, transparent 0deg, ${
-              leagueColors[league] || "#00ff88"
-            }10 2deg, transparent 4deg)`,
-            opacity: 0.1,
-            zIndex: 0,
-          },
         }}
       >
-        <Box sx={{ position: "relative", zIndex: 1 }}>
-          <Typography
-            variant="h2"
-            sx={{
-              color: "white",
-              fontWeight: 900,
-              textTransform: "uppercase",
-              letterSpacing: "0.1em",
-              mb: 3,
-            }}
-          >
-            Predict
-          </Typography>
+        <Typography
+          variant="h2"
+          sx={{
+            color: "white",
+            fontWeight: 900,
+            mb: 3,
+            letterSpacing: "0.1em",
+          }}
+        >
+          Predict
+        </Typography>
 
-          <TextField
-            variant="outlined"
-            label="Enter Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            sx={{
-              input: { color: "white" },
-              label: { color: "#aaa" },
-              fieldset: { borderColor: "#555" },
-              mb: 3,
-              width: "260px",
-            }}
-          />
+        <TextField
+          variant="outlined"
+          label="Enter Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          sx={{
+            input: { color: "white" },
+            label: { color: "#aaa" },
+            mb: 3,
+          }}
+        />
 
-          <Box>
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{
-                fontWeight: "bold",
-                textTransform: "uppercase",
-                px: 5,
-                py: 1.5,
-                borderRadius: 3,
-                backgroundColor: leagueColors[league] || "#00ff88",
-                filter: `drop-shadow(0 0 20px ${
-                  leagueColors[league] || "#00ff88"
-                })`,
-              }}
-              onClick={handleLogin}
-            >
-              Enter
-            </Button>
-          </Box>
-        </Box>
+        <Button
+          variant="contained"
+          onClick={handleLogin}
+          sx={{
+            backgroundColor: leagueColors[league] || "#00ff88",
+            px: 5,
+            py: 1.5,
+            fontWeight: "bold",
+            color: "white",
+          }}
+        >
+          Enter
+        </Button>
       </Box>
     );
   }
 
-  //  Main Page after login
   return (
     <Box
       sx={{
         minHeight: "100vh",
         background: getBgColor(),
-        transition: "background 0.8s ease",
         py: 4,
         px: 2,
-        position: "relative",
-        overflow: "hidden",
-        "&::before": {
-          content: '""',
-          position: "absolute",
-          top: 0,
-          right: 0,
-          width: "50%",
-          height: "100%",
-          background: `repeating-conic-gradient(from 0deg at 50% 50%, transparent 0deg, ${
-            leagueColors[league] || "#00ff88"
-          }10 2deg, transparent 4deg)`,
-          opacity: 0.1,
-          zIndex: 0,
-        },
       }}
     >
-      <Container maxWidth="xl" sx={{ position: "relative", zIndex: 1 }}>
-
+      <Container maxWidth="xl">
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Typography
             variant="h2"
             sx={{
               color: "white",
               fontWeight: 900,
-              fontSize: { xs: "2.5rem", md: "3.5rem" },
               textTransform: "uppercase",
               letterSpacing: "0.1em",
-              mb: 1,
             }}
           >
-            PREDICT
+            Predict
           </Typography>
+
           <Box
             sx={{
-              display: "inline-block",
               backgroundColor: leagueColors[league] || "#020b8aff",
               color: "white",
               px: 3,
               py: 1,
-              borderRadius: "8px",
+              mt: 2,
+              display: "inline-block",
+              fontSize: "1.6rem",
               fontWeight: 800,
-              fontSize: { xs: "1.5rem", md: "2rem" },
-              letterSpacing: "0.2em",
-              mb: 2,
+              letterSpacing: "0.15em",
+              borderRadius: 2,
             }}
           >
             {leagueFullNames[league] || "League"}
           </Box>
-          {/* Username greeting */}
+        </Box>
+
         <Typography
-          variant="h5"
-          sx={{
-            color: "#fff",
-            textAlign: "center",
-            mb: 2,
-            fontWeight: 500,
-            fontSize: 16
-          }}
+          variant="h6"
+          sx={{ color: "white", textAlign: "center", mb: 2 }}
         >
           Current User: {username}
         </Typography>
-        </Box>
 
+        {/* League selector ALWAYS shown */}
         <LeagueSelector league={league} onLeagueChange={handleLeagueChange} />
 
         {loading && (
-          <Box textAlign="center" sx={{ mt: 4 }}>
+          <Box textAlign="center" mt={4}>
             <CircularProgress
               size={60}
-              sx={{
-                color: leagueColors[league] || "#1100ffff",
-                filter: `drop-shadow(0 0 20px ${
-                  leagueColors[league] || "#1100ffff"
-                })`,
-              }}
+              sx={{ color: leagueColors[league] || "white" }}
             />
           </Box>
         )}
@@ -326,8 +289,8 @@ const HomePage = () => {
         {!loading &&
           displayTable &&
           !finalTable &&
-          playedResultsCount > 0 &&
-          currentMatchday && (
+          currentMatchday &&
+          currentMatches && (
             <Box
               sx={{
                 display: "grid",
@@ -377,33 +340,7 @@ const HomePage = () => {
             />
           )}
       </Container>
-
-      {/* Logout button — only on the first page after login (before league selection) */}
-      {!league && (
-        <Box
-          sx={{
-            position: "fixed",
-            bottom: 20,
-            left: "50%",
-            transform: "translateX(-50%)",
-            zIndex: 10,
-          }}
-        >
-          <Button
-            variant="outlined"
-            color="error"
-            onClick={handleLogout}
-            sx={{
-              textTransform: "none",
-              borderRadius: 2,
-              px: 4,
-            }}
-          >
-            Logout
-          </Button>
-        </Box>
-      )}
-     </Box>
+    </Box>
   );
 };
 
