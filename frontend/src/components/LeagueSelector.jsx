@@ -3,15 +3,12 @@ import { Card, CardHeader, CardContent, Typography, Box } from "@mui/material";
 import { leagueColors } from "../constants/leagueConstants";
 
 const LeagueSelector = ({ league, onLeagueChange }) => {
-  // Determine color based on league hex
+  // Determine color based on league
   const getLeagueRGBA = () => {
-    if (!league) return "0,0,0";
-    const hex = leagueColors[league] || "#000000";
-    const bigint = parseInt(hex.replace("#", ""), 16);
-    const r = (bigint >> 16) & 255;
-    const g = (bigint >> 8) & 255;
-    const b = bigint & 255;
-    return `${r},${g},${b}`;
+    if (league === "UCL") return "27,0,148";
+    if (league === "UEL") return "255,152,0";
+    if (league === "UCFL") return "0,255,136";
+    return "0,0,0";
   };
 
   const rgbaColor = getLeagueRGBA();
@@ -20,16 +17,16 @@ const LeagueSelector = ({ league, onLeagueChange }) => {
     <Card
       sx={{
         borderRadius: 4,
-        boxShadow: `0 20px 40px rgba(${rgbaColor}, 0.18)`,
-        background: `linear-gradient(135deg, rgba(${rgbaColor}, 0.06), rgba(0,0,0,0.8))`,
-        backdropFilter: "blur(12px)",
-        border: `1px solid rgba(${rgbaColor}, 0.18)`,
+        boxShadow: `0 20px 40px rgba(${rgbaColor}, 0.3)`,
+        background: `linear-gradient(135deg, rgba(${rgbaColor}, 0.1), rgba(0,0,0,0.8))`,
+        backdropFilter: "blur(20px)",
+        border: `2px solid rgba(${rgbaColor}, 0.3)`,
         position: "absolute",
-        top: 16,
+        top: 0,
         left: 20,
         width: 240,
+        height: "fit-content",
         transition: "all 0.3s ease",
-        zIndex: 10,
       }}
     >
       <CardHeader
@@ -37,22 +34,57 @@ const LeagueSelector = ({ league, onLeagueChange }) => {
           <Typography
             variant="subtitle1"
             sx={{
-              color: leagueColors[league] || "white",
+              color: league ? leagueColors[league] : "white",
               fontWeight: 700,
+              transition: "color 0.3s ease",
             }}
           >
             Select League
           </Typography>
         }
-        sx={{ padding: "10px 16px" }}
+        sx={{
+          backgroundColor: "rgba(17, 17, 17, 0)",
+          borderTopLeftRadius: 16,
+          borderTopRightRadius: 16,
+          padding: "12px 16px",
+        }}
       />
       <CardContent sx={{ pb: 2 }}>
         <Box
           component="select"
           value={league}
           onChange={(e) => onLeagueChange(e.target.value)}
-          sx={{ /* existing styles */ }}
-          >
+          sx={{
+            width: "100%",
+            padding: "10px 12px",
+            borderRadius: "8px",
+            border: `2px solid ${leagueColors[league] || "rgba(255,255,255,0.3)"}`,
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            color: leagueColors[league] || "rgba(255,255,255,0.7)",
+            fontWeight: 600,
+            cursor: "pointer",
+            fontSize: "0.95rem",
+            transition: "all 0.3s ease",
+            "&:hover": {
+              backgroundColor: "rgba(0, 0, 0, 0.7)",
+              boxShadow: `0 0 12px ${leagueColors[league] || "rgba(255,255,255,0.5)"}`,
+            },
+            "&:focus": {
+              outline: "none",
+              boxShadow: `0 0 16px ${leagueColors[league] || "rgba(255,255,255,0.7)"}`,
+              backgroundColor: "rgba(0, 0, 0, 0.7)",
+            },
+            "& option": {
+              backgroundColor: "#1a1a1a",
+              color: "white",
+              fontWeight: 500,
+            },
+            "& option:checked": {
+              backgroundColor: leagueColors[league] || "#020b8aff",
+              color: "black",
+            },
+          }}
+        >
           <option disabled value="">
             Choose League
           </option>

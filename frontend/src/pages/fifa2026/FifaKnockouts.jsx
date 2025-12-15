@@ -1,179 +1,167 @@
-import React, { useEffect, useState } from "react";
-import { Box, Container, Typography, TextField, Button } from "@mui/material";
+import React, { useEffect, useMemo, useState } from "react";
+import { Box, Container, Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import FifaFlag from "../../components/FifaFlag";
 import { apiPost } from "../../api/fifaApi";
+import FifaPredictionCard from "../../components/FifaPredictionCard";
+import LeagueSelector from "../../components/LeagueSelector";
 import { fifaTheme } from "../../constants/fifaTheme";
 
-export default function FifaKnockouts() {
-  const navigate = useNavigate();
-  const [state, setState] = useState(() => {
-    const s = sessionStorage.getItem("fifa_state");
-    return s ? JSON.parse(s) : null;
-  });
-  const [matches, setMatches] = useState({});
-  const [stage, setStage] = useState("r32");
-  const [scores, setScores] = useState({});
-  const [loading, setLoading] = useState(false);
+const ROUND_FLOW = ["r32", "r16", "qf", "sf", "final"];
 
-  useEffect(() => {
-    if (!state) {
-      navigate("/fifa/groups");
-      return;
-    }
-    if (state.r32) {
-      setMatches(state.r32);
-      setStage("r32");
-    } else {
-      // generate server-side (same as original)
-      (async () => {
-        setLoading(true);
-        try {
-          const res = await apiPost("/api/fifa2026/generate_r32", {
-            user_id: localStorage.getItem("username") || "guest",
-            state,
-          });
-          if (res?.success) {
-            const s2 = res.state || state;
-            sessionStorage.setItem("fifa_state", JSON.stringify(s2));
-            setState(s2);
-            setMatches(res.r32 || s2.r32 || {});
-          } else {
-            alert("Failed to generate Round of 32");
-          }
-        } catch (e) {
-          console.error("Network error generating R32", e);
-        } finally {
-          setLoading(false);
-        }
-      })();
-    }
-  }, []); // eslint-disable-line
+const ROUND_LABELS = {
+  r32: "Round of 32",
+  r16: "Round of 16",
+  qf: "Quarter Finals",
+  sf: "Semi Finals",
+  final: "Final & Third Place",
+};
 
-  const updateScore = (slot, side, value) => {
-    setScores((p) => ({ ...p, [slot]: { ...(p[slot] || {}), [side]: value } }));
-  };
+function isStageComplete(state, stage) {
+  if (!state) return false;
 
-  useEffect(() => {
-    // auto-submit when both scores exist; if tied wait for penaltyWinner
-    (async () => {
-      for (const slot of Object.keys(scores)) {
-        const sc = scores[slot] || {};
-        if (sc._submitted) continue;
-        if (sc.A === undefined || sc.B === undefined || sc.A === "" || sc.B === "") continue;
-        const A = Number(sc.A);
-        const B = Number(sc.B);
-        if (A === B && !sc.penaltyWinner) continue; // wait for penalty selection
-
-        // submit
-        setScores((p) => ({ ...p, [slot]: { ...(p[slot] || {}), submitting: true } }));
-        try {
-          const match = matches[slot] || {};
-          const payload = {
-            user_id: localStorage.getItem("username") || "guest",
-            stage,
-            match_slot: slot,
-            teamA: match.teamA,
-            teamB: match.teamB,
-            scoreA: Number(sc.A),
-            scoreB: Number(sc.B),
-            penaltyWinner: sc.penaltyWinner,
-          };
-
-          const res = await apiPost("/api/fifa2026/predict_knockout_match", payload);
-          if (res?.success) {
-            const s = { ...(state || {}) };
-            s.r32 = { ...(s.r32 || {}) };
-            s.r32[slot] = { ...(s.r32[slot] || match), scoreA: res.scoreA, scoreB: res.scoreB, winner: res.winner };
-            sessionStorage.setItem("fifa_state", JSON.stringify(s));
-            setState(s);
-            // mark submitted
-            setScores((p) => ({ ...p, [slot]: { ...(p[slot] || {}), _submitted: true, submitting: false } }));
-          } else {
-            console.warn("Failed to predict match", res);
-          }
-        } catch (e) {
-          console.error("predictMatch error", e);
-        }
-      }
-    })();
-  }, [scores]); // eslint-disable-line
-
-  function renderMatch(slot, m) {
-    const sc = scores[slot] || {};
+  if (stage === "final") {
     return (
-      <Box key={slot} sx={{ mb: 3, p: 3, borderRadius: 2, background: fifaTheme.background.panel, border: `1px solid ${fifaTheme.goldSoft}` }}>
-        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <FifaFlag team={m.teamA} size={34} />
-            <Typography sx={{ fontWeight: 800, color: "white" }}>{m.teamA}</Typography>
-          </Box>
-
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            {m.winner ? (
-              <Box sx={{ textAlign: "center" }}>
-                <Typography sx={{ fontWeight: 900, fontSize: 24 }}>{m.scoreA} - {m.scoreB}</Typography>
-                <Typography sx={{ color: fifaTheme.gold }}>Winner: {m.winner}</Typography>
-              </Box>
-            ) : (
-              <>
-                <TextField
-                  size="small"
-                  value={sc.A ?? ""}
-                  onChange={(e) => updateScore(slot, "A", e.target.value.replace(/[^\d]/g, ""))}
-                  inputProps={{ style: { textAlign: "center", fontWeight: 800 }, maxLength: 2 }}
-                  sx={{ width: 64, bgcolor: "rgba(255,255,255,0.03)", borderRadius: 1 }}
-                  disabled={sc._submitted}
-                />
-                <Typography sx={{ fontWeight: 900, color: "white" }}>-</Typography>
-                <TextField
-                  size="small"
-                  value={sc.B ?? ""}
-                  onChange={(e) => updateScore(slot, "B", e.target.value.replace(/[^\d]/g, ""))}
-                  inputProps={{ style: { textAlign: "center", fontWeight: 800 }, maxLength: 2 }}
-                  sx={{ width: 64, bgcolor: "rgba(255,255,255,0.03)", borderRadius: 1 }}
-                  disabled={sc._submitted}
-                />
-                {/* penalty inline when tied */}
-                {sc.A !== "" && sc.B !== "" && Number(sc.A) === Number(sc.B) && (
-                  <TextField
-                    select
-                    size="small"
-                    value={sc.penaltyWinner || ""}
-                    onChange={(e) => updateScore(slot, "penaltyWinner", e.target.value)}
-                    sx={{ minWidth: 160, ml: 2 }}
-                  >
-                    <option value=""></option>
-                    <option value={m.teamA}>{m.teamA}</option>
-                    <option value={m.teamB}>{m.teamB}</option>
-                  </TextField>
-                )}
-              </>
-            )}
-          </Box>
-
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Typography sx={{ fontWeight: 800, color: "white" }}>{m.teamB}</Typography>
-            <FifaFlag team={m.teamB} size={34} />
-          </Box>
-        </Box>
-      </Box>
+      state.final?.winner &&
+      state.third_place?.winner
     );
   }
 
-  if (!state) return <div style={{ padding: 20, color: "white" }}>Loading...</div>;
+  return state[stage]
+    ? Object.values(state[stage]).every((m) => !!m.winner)
+    : false;
+}
+
+export default function FifaKnockouts() {
+  const navigate = useNavigate();
+  const [state, setState] = useState(
+    JSON.parse(sessionStorage.getItem("fifa_state") || "null")
+  );
+  const [stage, setStage] = useState("r32");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!state) navigate("/fifa/groups");
+  }, []);
+
+  const activeMatches = useMemo(() => {
+    if (!state) return [];
+
+    if (stage === "final") {
+      const matches = [];
+      if (state.third_place)
+        matches.push({ ...state.third_place, match: "THIRD_PLACE" });
+      if (state.final)
+        matches.push({ ...state.final, match: "FINAL" });
+      return matches;
+    }
+
+    return state[stage]
+      ? Object.entries(state[stage]).map(([slot, m]) => ({
+          ...m,
+          match: slot,
+        }))
+      : [];
+  }, [state, stage]);
+
+  async function handleAutoSubmit(_, matchId, payload) {
+    const match =
+      stage === "final"
+        ? matchId === "THIRD_PLACE"
+          ? state.third_place
+          : state.final
+        : state[stage]?.[matchId];
+
+    if (!match) return;
+
+    const res = await apiPost("/api/fifa2026/predict_knockout_match", {
+      user_id: localStorage.getItem("username") || "guest",
+      stage,
+      match_slot: matchId,
+      teamA: match.teamA,
+      teamB: match.teamB,
+      scoreA: payload.scoreA,
+      scoreB: payload.scoreB,
+      penaltyWinner: payload.penaltyWinner,
+    });
+
+    if (!res?.success) return;
+
+    const next = { ...state };
+
+    if (stage === "final") {
+      const target =
+        matchId === "THIRD_PLACE" ? "third_place" : "final";
+      next[target] = {
+        ...next[target],
+        scoreA: res.scoreA,
+        scoreB: res.scoreB,
+        penaltyWinner: payload.penaltyWinner ?? null,
+        winner: res.winner,
+      };
+    } else {
+      next[stage][matchId] = {
+        ...next[stage][matchId],
+        scoreA: res.scoreA,
+        scoreB: res.scoreB,
+        penaltyWinner: payload.penaltyWinner ?? null,
+        winner: res.winner,
+      };
+    }
+
+    sessionStorage.setItem("fifa_state", JSON.stringify(next));
+    setState(next);
+  }
+
+  const currentIndex = ROUND_FLOW.indexOf(stage);
+  const nextStage = ROUND_FLOW[currentIndex + 1];
+  const canProceed = isStageComplete(state, stage);
+
+  async function proceed() {
+    if (stage === "final") {
+      navigate("/fifa/winner");
+      return;
+    }
+
+    setLoading(true);
+    const res = await apiPost(`/api/fifa2026/generate_${nextStage}`, {
+      user_id: "guest",
+      state,
+    });
+
+    if (res?.success) {
+      sessionStorage.setItem("fifa_state", JSON.stringify(res.state));
+      setState(res.state);
+      setStage(nextStage);
+    }
+    setLoading(false);
+  }
+
+  if (loading) return <div>Loading…</div>;
 
   return (
-    <Box sx={{ minHeight: "100vh", p: 8, background: fifaTheme.background.base }}>
-      <Container maxWidth="lg">
-        <Typography variant="h3" sx={{ color: "white", fontWeight: 900, mb: 2 }}>Knockout Stage — {stage.toUpperCase()}</Typography>
+    <Box sx={{ minHeight: "100vh", background: fifaTheme.background.base, p: 6 }}>
+      <LeagueSelector league="fifa2026" />
 
-        <Box>
-          {stage === "r32" && (state.r32 ? Object.entries(state.r32).map(([s,m]) => renderMatch(s,m)) : <p>No matches</p>)}
-          {stage === "r16" && (state.r16 ? Object.entries(state.r16).map(([s,m]) => renderMatch(s,m)) : null)}
-          {stage === "qf" && (state.qf ? Object.entries(state.qf).map(([s,m]) => renderMatch(s,m)) : null)}
-          {stage === "sf" && (state.sf ? Object.entries(state.sf).map(([s,m]) => renderMatch(s,m)) : null)}
-          {stage === "final" && state.final && renderMatch("FINAL", state.final)}
+      <Container maxWidth="lg">
+        <Typography variant="h4" sx={{ color: fifaTheme.gold, textAlign: "center", mb: 12 }}>
+          {ROUND_LABELS[stage]}
+        </Typography>
+
+        <FifaPredictionCard
+          matches={activeMatches}
+          mode="playoff"
+          roundKey={stage}
+          onAutoSubmit={handleAutoSubmit}
+        />
+
+        <Box sx={{ textAlign: "center", mt: 6 }}>
+          <Button
+            variant="contained"
+            disabled={!canProceed}
+            onClick={proceed}
+          >
+            {stage === "final" ? "View Results" : "Proceed"}
+          </Button>
         </Box>
       </Container>
     </Box>

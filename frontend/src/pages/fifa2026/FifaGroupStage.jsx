@@ -5,174 +5,225 @@ import FifaPredictionCard from "../../components/FifaPredictionCard";
 import FifaGroupTable from "../../components/FifaGroupTable";
 import { apiPost } from "../../api/fifaApi";
 import { fifaTheme } from "../../constants/fifaTheme";
+import LeagueSelector from "../../components/LeagueSelector";
 
 const GROUP_ORDER = "ABCDEFGHIJKL".split("");
 
 export default function FifaGroupStage() {
   const navigate = useNavigate();
+
   const [state, setState] = useState(() => {
     const s = sessionStorage.getItem("fifa_state");
     return s ? JSON.parse(s) : null;
   });
-  const [selectedGroup, setSelectedGroup] = useState(GROUP_ORDER[0]);
-  const [matchdayIndex, setMatchdayIndex] = useState(0);
+
+  const [matchday, setMatchday] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [toast, setToast] = useState("");
 
   useEffect(() => {
     if (!state) navigate("/fifa");
-  }, [state]);
+  }, [state, navigate]);
 
-  if (!state) return <div style={{ padding: 20, color: "white" }}>Loading...</div>;
+  if (!state) return <div style={{ padding: 20 }}>Loading…</div>;
 
-  const groups = state.groups || {};
-  const matches = state.matches || {};
-  const groupTables = state.group_tables || {};
-
-  const currentGroupMatches = matches[selectedGroup] || [];
-  const currentMatchdayMatches = currentGroupMatches.filter((m) => m.matchday === matchdayIndex + 1);
-
-  async function handleAutoSubmit(matchId, payload) {
-    // Update local state and send api to persist
-    const g = selectedGroup;
-    setLoading(true);
-
-    try {
-      const next = { ...(state || {}) };
-      next.matches = { ...(next.matches || {}) };
-      next.matches[g] = (next.matches[g] || []).map((m) => {
-        const id = m.match || m.id || `${m.teamA}-${m.teamB}`;
-        if (id === matchId) {
-          return { ...m, played: true, scoreA: payload.scoreA, scoreB: payload.scoreB, penaltyWinner: payload.penaltyWinner };
-        }
-        return m;
+  /* ----------------- MATCHDAY FIXTURES ----------------- */
+  const matchdayMatches = useMemo(() => {
+    const out = [];
+    for (const g of GROUP_ORDER) {
+      const list = state.matches?.[g] || [];
+      list.forEach((m) => {
+        if (m.matchday === matchday) out.push(m);
       });
+    }
+    return out;
+  }, [state, matchday]);
+
+  /* ----------------- MATCHDAY COMPLETION CHECK ----------------- */
+  const isCurrentMatchdayComplete = useMemo(() => {
+    if (!matchdayMatches.length) return false;
+    return matchdayMatches.every(
+      (m) =>
+        m.played === true &&
+        m.scoreA !== null &&
+        m.scoreB !== null
+    );
+  }, [matchdayMatches]);
+
+  /* ----------------- SUBMIT HANDLER ----------------- */
+  async function handleAutoSubmit(matchId, payload) {
+    setLoading(true);
+    try {
+      const next = { ...state, matches: { ...state.matches } };
+
+      for (const g of Object.keys(next.matches)) {
+        next.matches[g] = next.matches[g].map((m) =>
+          m.id === matchId
+            ? {
+                ...m,
+                played: true,
+                scoreA: payload.scoreA,
+                scoreB: payload.scoreB,
+              }
+            : m
+        );
+      }
 
       const res = await apiPost("/api/fifa2026/submit_group_results", {
-        user_id: localStorage.getItem("username") || "guest",
+        user_id: "guest",
         state: next,
       });
 
-      if (res?.success) {
-        const newState = res.state || next;
-        sessionStorage.setItem("fifa_state", JSON.stringify(newState));
-        setState(newState);
-        setToast("Saved — group table updated");
-        // advance to next match automatically handled by card onAdvance callback in practice
-      } else {
-        console.warn("Failed saving group results", res);
+      if (res?.success && res.state) {
+        sessionStorage.setItem("fifa_state", JSON.stringify(res.state));
+        setState(res.state);
       }
-    } catch (e) {
-      console.error("submit_group_results failed", e);
     } finally {
       setLoading(false);
-      setTimeout(() => setToast(""), 2000);
     }
   }
 
-  function handleAdvance(nextIndex) {
-    if (nextIndex === null) {
-      // All matches done for this matchday — advance to next matchday or group
-      if (matchdayIndex < 2) setMatchdayIndex((i) => i + 1);
-      else {
-        const idx = GROUP_ORDER.indexOf(selectedGroup);
-        if (idx < GROUP_ORDER.length - 1) {
-          setSelectedGroup(GROUP_ORDER[idx + 1]);
-          setMatchdayIndex(0);
+  /* ----------------- AUTO-ADVANCE ON FINAL MATCHDAY ----------------- */
+  useEffect(() => {
+    if (matchday === 3 && isCurrentMatchdayComplete) {
+      (async () => {
+        try {
+          const res = await apiPost("/api/fifa2026/generate_r32", { state });
+          if (res?.success && res.state) {
+            sessionStorage.setItem(
+              "fifa_state",
+              JSON.stringify(res.state)
+            );
+            navigate("/fifa/knockouts");
+          }
+        } catch (err) {
+          console.error("Failed to generate knockouts", err);
         }
-      }
-    } else {
-      // focusing inside same matchday — no UI state change needed
+      })();
     }
-  }
+  }, [matchday, isCurrentMatchdayComplete, state, navigate]);
 
-  const sidebarTables = useMemo(() => {
-    return GROUP_ORDER.map((g) => ({
-      group: g,
-      table: (state.group_tables && state.group_tables[g]) || {},
-      matches: (state.matches && state.matches[g]) || [],
-    }));
-  }, [state]);
-
+  /* ----------------- RENDER ----------------- */
   return (
     <Box sx={{ minHeight: "100vh", background: fifaTheme.background.base, p: 6 }}>
+      <LeagueSelector
+        league="fifa2026"
+        onLeagueChange={(l) => {
+          if (l !== "fifa2026") {
+            sessionStorage.clear();
+            navigate("/");
+          }
+        }}
+      />
+
       <Container maxWidth="xl">
-        <Typography variant="h4" sx={{ color: fifaTheme.gold, fontWeight: 900, mb: 3 }}>
-          Group Stage — Predict by Group
+        <Typography
+          variant="h3"
+          sx={{
+            color: "#ffffff",
+            fontWeight: 900,
+            textAlign: "center",
+            mb: 3,
+            textShadow: "0 0 16px rgba(0,255,255,0.5)",
+          }}
+        >
+          Group Stage
         </Typography>
 
-        <Box sx={{ display: "grid", gridTemplateColumns: "2fr 360px", gap: 4 }}>
-          <Box>
-            <Box sx={{ display: "flex", gap: 2, alignItems: "center", mb: 3 }}>
-              <Typography sx={{ color: fifaTheme.textPrimary, fontWeight: 800 }}>Selected Group:</Typography>
-              <select
-                value={selectedGroup}
-                onChange={(e) => {
-                  setSelectedGroup(e.target.value);
-                  setMatchdayIndex(0);
-                }}
-                style={{
-                  padding: 8,
-                  borderRadius: 8,
-                  background: "rgba(255,255,255,0.02)",
-                  color: fifaTheme.textPrimary,
-                }}
-              >
-                {GROUP_ORDER.map((g) => (
-                  <option key={g} value={g}>
-                    Group {g}
-                  </option>
-                ))}
-              </select>
+        {/* MATCHDAY CONTROLS */}
+        <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mb: 4 }}>
+          <Button
+            disabled={matchday === 1}
+            onClick={() => setMatchday((d) => d - 1)}
+          >
+            Prev
+          </Button>
 
-              <Box sx={{ ml: "auto", display: "flex", gap: 2 }}>
-                <Button variant="outlined" disabled={matchdayIndex === 0} onClick={() => setMatchdayIndex((i) => Math.max(0, i - 1))}>
-                  Prev
-                </Button>
-                <Typography sx={{ color: fifaTheme.textMuted, alignSelf: "center" }}>Matchday {matchdayIndex + 1} / 3</Typography>
-                <Button variant="outlined" disabled={matchdayIndex === 2} onClick={() => setMatchdayIndex((i) => Math.min(2, i + 1))}>
-                  Next
-                </Button>
-              </Box>
-            </Box>
+          <Typography sx={{ fontWeight: 800, color: "#fff" }}>
+            Matchday {matchday}
+          </Typography>
 
-            <FifaPredictionCard
-              matches={currentMatchdayMatches}
-              onAutoSubmit={handleAutoSubmit}
-              onAdvance={handleAdvance}
-              disabled={loading}
-              leagueTitle={`Group ${selectedGroup} — Matchday ${matchdayIndex + 1}`}
-            />
+          <Button
+            disabled={!isCurrentMatchdayComplete}
+            onClick={async () => {
+              if (matchday < 3) {
+                setMatchday((d) => d + 1);
+                return;
+              }
 
-            {toast && <div style={{ color: "#6ee7b7", marginTop: 10 }}>{toast}</div>}
-          </Box>
+              try {
+                const res = await apiPost("/api/fifa2026/generate_r32", { state });
+                if (res?.success && res.state) {
+                  sessionStorage.setItem(
+                    "fifa_state",
+                    JSON.stringify(res.state)
+                  );
+                  navigate("/fifa/knockouts");
+                }
+              } catch (err) {
+                console.error(err);
+              }
+            }}
+          >
+            {matchday < 3 ? "Next" : "Go to Knockouts"}
+          </Button>
+        </Box>
 
-          <Box>
-            <Typography sx={{ color: fifaTheme.gold, fontWeight: 900, mb: 2 }}>Groups</Typography>
+        {/* MAIN CONTENT */}
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", lg: "2fr 1fr" },
+            gap: 3,
+            alignItems: "flex-start",
+          }}
+        >
+          <FifaPredictionCard
+            matches={matchdayMatches}
+            mode="group"
+            leagueTitle={`Matchday ${matchday}`}
+            disabled={loading}
+            onAutoSubmit={(_, id, payload) =>
+              handleAutoSubmit(id, payload)
+            }
+          />
 
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              {sidebarTables.map((s) => (
-                <Box
-                  key={s.group}
-                  onClick={() => {
-                    setSelectedGroup(s.group);
-                    setMatchdayIndex(0);
-                  }}
-                  sx={{
-                    p: 2,
-                    borderRadius: 2,
-                    background: s.group === selectedGroup ? "rgba(246,195,59,0.06)" : "rgba(255,255,255,0.02)",
-                    border: "1px solid rgba(255,255,255,0.04)",
-                    cursor: "pointer",
-                  }}
-                >
-                  <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
-                    <Typography sx={{ color: fifaTheme.textPrimary, fontWeight: 800 }}>Group {s.group}</Typography>
-                    <Typography sx={{ color: fifaTheme.textMuted, fontSize: 12 }}>{s.matches.filter((m) => m.played).length}/6</Typography>
-                  </Box>
+          {/* GROUP TABLE */}
+          <Box
+            sx={{
+              position: "relative",
+              borderRadius: 4,
+              p: 1.2,
+              background:
+                "linear-gradient(180deg, rgba(10,15,20,0.65), rgba(5,5,8,0.85))",
+              backdropFilter: "blur(10px)",
+              border: "1px solid rgba(0,255,255,0.35)",
+              boxShadow: `
+                0 0 18px rgba(0,255,255,0.45),
+                0 0 40px rgba(0,255,255,0.25)
+              `,
+            }}
+          >
+            <Typography
+              sx={{
+                color: "#ffffff",
+                fontWeight: 900,
+                textAlign: "center",
+                mb: 1,
+                fontSize: 14,
+                letterSpacing: 1,
+                textShadow: "0 0 12px rgba(0,255,255,0.6)",
+              }}
+            >
+              GROUPS
+            </Typography>
 
-                  <FifaGroupTable tableData={s.table} group={s.group} />
-                </Box>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 0.75 }}>
+              {GROUP_ORDER.map((g) => (
+                <FifaGroupTable
+                  key={g}
+                  group={g}
+                  tableData={state.group_tables?.[g] || {}}
+                />
               ))}
             </Box>
           </Box>

@@ -2,29 +2,28 @@ import uuid
 import copy
 
 def generate_group_fixtures(groups):
-    """
-    groups: { "A": [t1,t2,t3,t4], ... }
-    returns: matches dict: { "A": [ {id,teamA,teamB,played,scoreA,scoreB}, ... ], ... }
-    """
     state_matches = {}
     for g, teams in groups.items():
-        # standard 4-team round robin 6 matches
         fixtures = [
-            (teams[0], teams[1]),
-            (teams[2], teams[3]),
-            (teams[0], teams[2]),
-            (teams[1], teams[3]),
-            (teams[0], teams[3]),
-            (teams[1], teams[2]),
+            (teams[0], teams[1], 1),
+            (teams[2], teams[3], 1),
+            (teams[0], teams[2], 2),
+            (teams[1], teams[3], 2),
+            (teams[0], teams[3], 3),
+            (teams[1], teams[2], 3),
         ]
+
         state_matches[g] = [{
             "id": str(uuid.uuid4()),
             "teamA": a,
             "teamB": b,
+            "group": g,
+            "matchday": md,
             "played": False,
             "scoreA": None,
             "scoreB": None
-        } for a, b in fixtures]
+        } for a, b, md in fixtures]
+
     return state_matches
 
 def apply_group_match(table, A, B, ga, gb):

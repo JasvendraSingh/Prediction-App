@@ -1,289 +1,270 @@
-import React, { useEffect, useState } from "react";
-import { Box, Container, Typography, TextField, Button } from "@mui/material";
-import FifaFlag from "../../components/FifaFlag";
-import { apiGet, apiPost } from "../../api/fifaApi";
-import { fifaTheme } from "../../constants/fifaTheme";
+import React, { useEffect, useMemo, useState } from "react";
+import { Box, Container, Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { apiGet, apiPost } from "../../api/fifaApi";
+import FifaPredictionCard from "../../components/FifaPredictionCard";
+import LeagueSelector from "../../components/LeagueSelector";
+import { fifaTheme } from "../../constants/fifaTheme";
+
+function matchIsPredicted(match) {
+  if (!match || typeof match !== "object") return false;
+
+  const a = match.scoreA;
+  const b = match.scoreB;
+
+  if (a === "" || a == null) return false;
+  if (b === "" || b == null) return false;
+
+  if (Number(a) === Number(b)) {
+    return !!match.penaltyWinner;
+  }
+  return true;
+}
+
+function allPlayoffsPredicted(state) {
+  if (!state) return false;
+
+  const ROUND_KEYS = ["round1", "semifinals", "final"];
+
+  for (const block of Object.values(state)) {
+    for (const rk of ROUND_KEYS) {
+      const round = block?.[rk];
+      if (!Array.isArray(round)) continue;
+
+      for (const m of round) {
+        if (!matchIsPredicted(m)) return false;
+      }
+    }
+  }
+  return true;
+}
+
+function computeBlockWinner(block) {
+  const f = block?.final?.[0];
+  if (!f) return null;
+
+  if (f.winner) return f.winner;
+  if (f.scoreA > f.scoreB) return f.teamA;
+  if (f.scoreB > f.scoreA) return f.teamB;
+  return f.penaltyWinner ?? null;
+}
 
 export default function FifaPlayoffs() {
-  const navigate = useNavigate(); 
-  const [state, setState] = useState(() => {
-    const s = sessionStorage.getItem("fifa_playoffs");
-    return s ? JSON.parse(s) : null;
-  });
-  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const [state, setState] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [activeBlockIndex, setActiveBlockIndex] = useState(0);
 
   useEffect(() => {
-    if (!state) {
-      setLoading(true);
-      apiGet("/api/fifa2026/playoffs/init")
-        .then((res) => {
-          if (res?.success) {
-            sessionStorage.setItem("fifa_playoffs", JSON.stringify(res.state));
-            setState(res.state);
-          }
-        })
-        .catch((e) => {
-          console.error("Failed loading playoffs init", e);
-        })
-        .finally(() => setLoading(false));
+    const cached = sessionStorage.getItem("fifa_playoffs");
+
+    if (cached) {
+      setState(JSON.parse(cached));
+      setLoading(false);
+      return;
     }
+
+    apiGet("/api/fifa2026/playoffs/init")
+      .then((res) => {
+        if (res?.success && res.state) {
+          setState(res.state);
+          sessionStorage.setItem(
+            "fifa_playoffs",
+            JSON.stringify(res.state)
+          );
+        }
+      })
+      .finally(() => setLoading(false));
   }, []);
 
-  async function submitMatchAuto(key, matchId, payload) {
-    try {
-      const body = {
-        key,
-        match_id: matchId,
-        scoreA: payload.scoreA,
-        scoreB: payload.scoreB,
-        penaltyWinner: payload.penaltyWinner,
-        teamA: payload.teamA,
-        teamB: payload.teamB,
-        state: state[key],
-      };
+  const blockKeys = useMemo(
+    () => (state ? Object.keys(state) : []),
+    [state]
+  );
 
-      const res = await apiPost("/api/fifa2026/playoffs/predict_match", body);
-      if (res?.success) {
-        const updatedBlock =
-          res.playoff || res.updated || (res.state && res.state[key]) || state[key];
+  const safeIndex =
+    activeBlockIndex >= blockKeys.length ? 0 : activeBlockIndex;
 
-        const next = { ...state, [key]: updatedBlock };
-        sessionStorage.setItem("fifa_playoffs", JSON.stringify(next));
-        setState(next);
-      } else {
-        console.warn("Failed to save match", res);
-      }
-    } catch (err) {
-      console.error("submitMatch error", err);
+  const activeKey = blockKeys[safeIndex];
+  const activeBlock = state?.[activeKey] ?? null;
+
+  const playoffWinner = useMemo(
+    () => computeBlockWinner(activeBlock),
+    [activeBlock]
+  );
+
+  const canContinue = useMemo(
+    () => allPlayoffsPredicted(state),
+    [state]
+  );
+
+  const ROUND_KEYS = ["round1", "semifinals", "final"];
+
+  const activeRounds = useMemo(() => {
+    if (!activeBlock) return [];
+    return ROUND_KEYS.filter(
+      (r) => Array.isArray(activeBlock[r]) && activeBlock[r].length > 0
+    );
+  }, [activeBlock]);
+
+  async function handleAutoSubmit(blockKey, roundKey, matchId, payload) {
+    const res = await apiPost("/api/fifa2026/playoffs/predict_match", {
+      key: blockKey,
+      round_type: roundKey,
+      match_id: matchId,
+      scoreA: payload.scoreA,
+      scoreB: payload.scoreB,
+      penaltyWinner: payload.penaltyWinner,
+      state: state[blockKey],
+    });
+
+    if (res?.success && res.state?.[blockKey]) {
+      const next = { ...state, [blockKey]: res.state[blockKey] };
+      setState(next);
+      sessionStorage.setItem("fifa_playoffs", JSON.stringify(next));
     }
   }
 
-  function renderRoundBlock(key, block, roundKey) {
-    if (!block || !block[roundKey]) return null;
+  let content = null;
 
-    return block[roundKey].map((m) => {
-      const matchId = m.match || m.id || `${m.teamA}-${m.teamB}`;
-
-      return (
-        <Box key={matchId} sx={{ mb: 3 }}>
-          <Box
-            sx={{
-              p: 3,
-              borderRadius: 2,
-              background: fifaTheme.background.panel,
-              border: `1px solid ${fifaTheme.goldSoft}`,
-            }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                <FifaFlag team={m.teamA} size={36} />
-                <Typography sx={{ color: fifaTheme.textPrimary, fontWeight: 800 }}>
-                  {m.teamA}
-                </Typography>
-              </Box>
-
-              <Box sx={{ textAlign: "center" }}>
-                <Typography
-                  sx={{
-                    color: fifaTheme.textMuted,
-                    fontSize: 12,
-                    textTransform: "uppercase",
-                    mb: 1,
-                  }}
-                >
-                  {roundKey}
-                </Typography>
-
-                {/* SCORES */}
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  <TextField
-                    type="number"
-                    size="small"
-                    value={m.scoreA ?? ""}
-                    onChange={(e) => {
-                      const v = e.target.value.replace(/[^\d]/g, "");
-                      setState((prev) => {
-                        const copy = { ...prev };
-                        ["round1", "semifinals", "final"].forEach((rk) => {
-                          if (copy[key]?.[rk]) {
-                            copy[key][rk] = copy[key][rk].map((itm) =>
-                              (itm.match || itm.id) === matchId
-                                ? { ...itm, scoreA: v }
-                                : itm
-                            );
-                          }
-                        });
-                        return copy;
-                      });
-
-                      const other = m.scoreB ?? "";
-                      if (other !== "" && other !== undefined) {
-                        submitMatchAuto(key, matchId, {
-                          teamA: m.teamA,
-                          teamB: m.teamB,
-                          scoreA: Number(v || 0),
-                          scoreB: Number(other || 0),
-                          penaltyWinner: m.penaltyWinner || "",
-                        });
-                      }
-                    }}
-                    sx={{ width: 80 }}
-                  />
-
-                  <TextField
-                    type="number"
-                    size="small"
-                    value={m.scoreB ?? ""}
-                    onChange={(e) => {
-                      const v = e.target.value.replace(/[^\d]/g, "");
-                      setState((prev) => {
-                        const copy = { ...prev };
-                        ["round1", "semifinals", "final"].forEach((rk) => {
-                          if (copy[key]?.[rk]) {
-                            copy[key][rk] = copy[key][rk].map((itm) =>
-                              (itm.match || itm.id) === matchId
-                                ? { ...itm, scoreB: v }
-                                : itm
-                            );
-                          }
-                        });
-                        return copy;
-                      });
-
-                      const other = m.scoreA ?? "";
-                      if (other !== "" && other !== undefined) {
-                        submitMatchAuto(key, matchId, {
-                          teamA: m.teamA,
-                          teamB: m.teamB,
-                          scoreA: Number(other || 0),
-                          scoreB: Number(v || 0),
-                          penaltyWinner: m.penaltyWinner || "",
-                        });
-                      }
-                    }}
-                    sx={{ width: 80 }}
-                  />
-                </Box>
-
-                {/* INLINE PENALTIES */}
-                {String(m.scoreA) === String(m.scoreB) &&
-                  String(m.scoreA) !== "" && (
-                    <Box sx={{ mt: 2 }}>
-                      <TextField
-                        select
-                        size="small"
-                        value={m.penaltyWinner || ""}
-                        onChange={(e) => {
-                          const v = e.target.value;
-
-                          setState((prev) => {
-                            const copy = { ...prev };
-                            ["round1", "semifinals", "final"].forEach((rk) => {
-                              if (copy[key]?.[rk]) {
-                                copy[key][rk] = copy[key][rk].map((itm) =>
-                                  (itm.match || itm.id) === matchId
-                                    ? { ...itm, penaltyWinner: v }
-                                    : itm
-                                );
-                              }
-                            });
-                            return copy;
-                          });
-
-                          submitMatchAuto(key, matchId, {
-                            teamA: m.teamA,
-                            teamB: m.teamB,
-                            scoreA: Number(m.scoreA || 0),
-                            scoreB: Number(m.scoreB || 0),
-                            penaltyWinner: v,
-                          });
-                        }}
-                        sx={{ minWidth: 220 }}
-                      >
-                        <option value=""></option>
-                        <option value={m.teamA}>{m.teamA}</option>
-                        <option value={m.teamB}>{m.teamB}</option>
-                      </TextField>
-                    </Box>
-                  )}
-
-                <Box sx={{ mt: 2 }}>
-                  {m.winner && (
-                    <Typography sx={{ color: fifaTheme.gold, fontWeight: 800 }}>
-                      Winner: {m.winner}
-                    </Typography>
-                  )}
-                </Box>
-              </Box>
-
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                <Typography sx={{ color: fifaTheme.textPrimary, fontWeight: 800 }}>
-                  {m.teamB}
-                </Typography>
-                <FifaFlag team={m.teamB} size={36} />
-              </Box>
-            </Box>
-          </Box>
-        </Box>
-      );
-    });
-  }
-
-  if (loading) return <div className="p-8">Loading playoffs...</div>;
-  if (!state) return <div className="p-8 text-white">No playoffs data.</div>;
-
-  return (
-    <Box sx={{ minHeight: "100vh", background: fifaTheme.background.base, p: 6 }}>
+  if (loading) {
+    content = <div style={{ padding: 32 }}>Loading playoffs…</div>;
+  } else if (!state || blockKeys.length === 0) {
+    content = <div style={{ padding: 32 }}>No playoffs data.</div>;
+  } else {
+    content = (
       <Container maxWidth="lg">
-        <Typography variant="h4" sx={{ color: fifaTheme.gold, fontWeight: 900, mb: 4 }}>
+        <Typography
+          variant="h4"
+          sx={{ color: fifaTheme.gold, textAlign: "center", mb: 15 }}
+        >
           Predict Playoffs
         </Typography>
 
-        {Object.entries(state).map(([key, block]) => (
-          <Box key={key} sx={{ mb: 6 }}>
-            <Typography sx={{ color: fifaTheme.gold, fontWeight: 800, mb: 2 }}>
-              {block.slot_name || key}
-            </Typography>
+        <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mb: 4 }}>
+          {blockKeys.map((k, idx) => (
+            <Button
+              key={k}
+              variant={idx === safeIndex ? "contained" : "outlined"}
+              onClick={() => setActiveBlockIndex(idx)}
+            >
+              {state[k].slot_name || k}
+            </Button>
+          ))}
+        </Box>
 
-            {renderRoundBlock(key, block, "round1")}
-            {renderRoundBlock(key, block, "semifinals")}
-            {renderRoundBlock(key, block, "final")}
+        {activeRounds.map((roundKey) => (
+          <Box key={roundKey} sx={{ mb: 4 }}>
+            <FifaPredictionCard
+              matches={activeBlock[roundKey]}
+              mode="playoff"
+              roundKey={roundKey}
+              leagueTitle={roundKey.toUpperCase()}
+              onAutoSubmit={(rk, id, payload) =>
+                handleAutoSubmit(activeKey, rk, id, payload)
+              }
+            />
           </Box>
         ))}
 
         <Box sx={{ textAlign: "center", mt: 4 }}>
+          <Typography variant="subtitle2">Playoff Winner</Typography>
+          <Typography variant="h5">
+            {playoffWinner || "Not decided"}
+          </Typography>
+        </Box>
+
+        <Box sx={{ textAlign: "center", mt: 4 }}>
           <Button
             variant="contained"
-            onClick={() => {
-              const user_id = localStorage.getItem("username") || "guest";
-              apiPost("/api/fifa2026/playoffs/commit_to_groups", {
-                user_id,
-                playoffs_state: state,
-              })
-                .then((res) => {
-                  if (res?.success && res.state) {
-                    sessionStorage.setItem("fifa_state", JSON.stringify(res.state));
-                    sessionStorage.removeItem("fifa_playoffs");
-                    navigate("/fifa/groups");
-                  } else {
-                    navigate("/fifa/groups");
-                  }
-                })
-                .catch(() => navigate("/fifa/groups"));
+            disabled={!canContinue}
+            onClick={async () => {
+              const res = await apiPost(
+                "/api/fifa2026/playoffs/commit_to_groups",
+                {
+                  user_id: "guest",
+                  playoffs_state: state,
+                }
+              );
+
+              if (res?.success && res.state) {
+                sessionStorage.setItem("fifa_state", JSON.stringify(res.state));
+                navigate("/fifa/groups");
+              }
             }}
-            sx={{ background: fifaTheme.goldStrong, color: "#080808" }}
+            sx={{
+              position: "relative",
+              px: 5,
+              py: 1.6,
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              borderRadius: "14px",
+
+              background:
+                "linear-gradient(135deg, rgba(180,240,255,0.9), rgba(90,180,255,0.9))",
+              backdropFilter: "blur(6px)",
+
+              boxShadow:
+                "0 0 12px rgba(120,220,255,0.6), 0 0 28px rgba(120,220,255,0.45), inset 0 1px 1px rgba(255,255,255,0.6)",
+
+              color: "#003049",
+
+              transition: "all 0.35s ease",
+
+              "&:hover": {
+                transform: "translateY(-2px) scale(1.02)",
+                boxShadow:
+                  "0 0 18px rgba(120,220,255,0.9), 0 0 42px rgba(120,220,255,0.7), inset 0 1px 1px rgba(255,255,255,0.75)",
+                background:
+                  "linear-gradient(135deg, rgba(200,255,255,0.95), rgba(110,200,255,0.95))",
+              },
+
+              "&:active": {
+                transform: "translateY(0) scale(0.98)",
+              },
+
+              "&.Mui-disabled": {
+                background: "rgba(120,120,120,0.3)",
+                boxShadow: "none",
+                color: "#aaa",
+              },
+
+              "&::after": {
+                content: '""',
+                position: "absolute",
+                top: 2,
+                left: 4,
+                right: 4,
+                height: "35%",
+                borderRadius: "12px",
+                background:
+                  "linear-gradient(180deg, rgba(255,255,255,0.55), transparent)",
+                pointerEvents: "none",
+              },
+            }}
           >
-            Continue to Group Stage
+            Enter Group Stage
           </Button>
         </Box>
+
       </Container>
+    );
+  }
+
+  return (
+    <Box sx={{ minHeight: "100vh", background: fifaTheme.background.base, p: 6 }}>
+          <LeagueSelector
+            league="fifa2026"
+            onLeagueChange={(l) => {
+              if (l !== "fifa2026") {
+                sessionStorage.clear();
+                navigate("/");
+              }
+            }}
+          />
+      {content}
     </Box>
   );
 }

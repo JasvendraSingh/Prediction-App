@@ -1,183 +1,375 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Card, CardHeader, CardContent, Box, TextField, Button, Typography, MenuItem } from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  Box,
+  TextField,
+  Typography,
+  MenuItem,
+} from "@mui/material";
 import FifaFlag from "./FifaFlag";
-import { fifaTheme } from "../constants/fifaTheme";
 
-export default function FifaPredictionCard({ matches = [], onAutoSubmit, onAdvance, disabled = false, leagueTitle = "Group" }) {
+export default function FifaPredictionCard({
+  matches = [],
+  mode = "group",
+  roundKey,
+  onAutoSubmit,
+  disabled = false,
+  leagueTitle,
+}) {
   const [local, setLocal] = useState({});
   const refs = useRef({});
 
+  /* ---------- SYNC ---------- */
   useEffect(() => {
-    const init = {};
+    const next = {};
     matches.forEach((m, idx) => {
-      const id = m.id || `${m.teamA}-${m.teamB}-${idx}`;
-      init[id] = { A: m.scoreA ?? "", B: m.scoreB ?? "", penaltyWinner: m.penaltyWinner ?? "", submitted: !!m.winner || !!m.played };
+      const id = m.match || m.id || `${m.teamA}-${m.teamB}-${idx}`;
+      next[id] = {
+        scoreA: m.scoreA ?? "",
+        scoreB: m.scoreB ?? "",
+        penaltyWinner: m.penaltyWinner ?? "",
+        submitted: !!m.played || !!m.winner,
+        submitting: false,
+      };
     });
-    setLocal(init);
-    // focus first input
-    setTimeout(() => {
-      const firstKey = Object.keys(init)[0];
-      refs.current[firstKey]?.A?.focus?.();
-    }, 120);
+    setLocal(next);
   }, [matches]);
 
-  function updateValue(id, field, value) {
-    setLocal((p) => {
-      const next = { ...p, [id]: { ...(p[id] || {}), [field]: value } };
-      return next;
-    });
+  /* ---------- KEY FLOW ---------- */
+  function handleKeyDown(e, id, field) {
+    if (e.key !== "Enter") return;
+
+    e.preventDefault();  
+    e.stopPropagation(); 
+
+    if (field === "A") {
+      refs.current[id]?.B?.focus();
+      return;
+    }
+
+    if (field === "B") {
+      const s = local[id];
+      if (!s) return;
+
+      if (
+        mode === "playoff" &&
+        s.scoreA !== "" &&
+        s.scoreB !== "" &&
+        Number(s.scoreA) === Number(s.scoreB)
+      ) {
+        refs.current[id]?.penalty?.focus();
+        return;
+      }
+
+      submit(id);
+    }
   }
 
-  // attempt auto-submit whenever both scores present (and penalty if tied)
-  useEffect(() => {
-    (async () => {
-      for (const id of Object.keys(local)) {
-        const s = local[id];
-        if (!s) continue;
-        if (s.submitted) continue;
-        if (s.A === "" || s.B === "" || s.A === undefined || s.B === undefined) continue;
-        // both scores present
-        const A = Number(s.A);
-        const B = Number(s.B);
-        if (A === B) {
-          // need penalty winner selected
-          if (!s.penaltyWinner) {
-            // focus penalty dropdown
-            refs.current[id]?.penalty?.focus?.();
-            continue;
-          }
-        }
+  /* ---------- SUBMIT ---------- */
+  async function submit(id, override = {}) {
+    const s = { ...local[id], ...override };
+    if (!s || s.submitted || s.submitting) return;
+    if (s.scoreA === "" || s.scoreB === "") return;
 
-        // build payload and submit
-        const matchObj = matches.find((m) => (m.id || `${m.teamA}-${m.teamB}`) === id || (m.id === id));
-        const payload = {
-          match_id: matchObj?.match || matchObj?.id || id,
-          teamA: matchObj?.teamA || matchObj?.homeTeam,
-          teamB: matchObj?.teamB || matchObj?.awayTeam,
-          scoreA: Number(s.A),
-          scoreB: Number(s.B),
-          penaltyWinner: s.penaltyWinner,
-        };
+    const a = Number(s.scoreA);
+    const b = Number(s.scoreB);
+    if (Number.isNaN(a) || Number.isNaN(b)) return;
+    if (mode === "playoff" && a === b && !s.penaltyWinner) return;
 
-        // mark as submitted immediately to avoid double submits while awaiting
-        setLocal((p) => ({ ...p, [id]: { ...(p[id] || {}), submitting: true } }));
+    const m = matches.find(
+      (x, idx) =>
+        (x.match || x.id || `${x.teamA}-${x.teamB}-${idx}`) === id
+    );
+    if (!m) return;
 
-        try {
-          if (onAutoSubmit) {
-            await onAutoSubmit(id, payload);
-          }
-        } catch (e) {
-          console.error("Auto submit error", e);
-        } finally {
-          // mark submitted and move focus to next match's first input
-          setLocal((p) => ({ ...p, [id]: { ...(p[id] || {}), submitted: true, submitting: false } }));
+    setLocal((p) => ({
+      ...p,
+      [id]: { ...p[id], submitting: true },
+    }));
 
-          const keys = Object.keys(local);
-          const idx = keys.indexOf(id);
-          const nextKey = keys[idx + 1];
-          if (nextKey) {
-            // focus next home input
-            setTimeout(() => refs.current[nextKey]?.A?.focus?.(), 120);
-            if (onAdvance) onAdvance(idx + 1);
-          } else {
-            // finished all matches in this card
-            if (onAdvance) onAdvance(null);
-          }
-        }
-      }
-    })();
-  }, [local]); 
+    await onAutoSubmit(roundKey, m.match || m.id || id, {
+      scoreA: a,
+      scoreB: b,
+      penaltyWinner: s.penaltyWinner,
+    });
 
+    setLocal((p) => ({
+      ...p,
+      [id]: { ...p[id], submitted: true, submitting: false },
+    }));
+
+    const keys = Object.keys(local);
+    const idx = keys.indexOf(id);
+    const nextKey = keys[idx + 1];
+    if (nextKey) {
+      setTimeout(() => refs.current[nextKey]?.A?.focus(), 80);
+    }
+  }
+
+  /* ---------- RENDER ---------- */
   return (
     <Card
       sx={{
-        borderRadius: 3,
-        background: "rgba(0, 0, 0, 0.75)",
-        border: `1px solid ${fifaTheme.goldSoft}`,
-        boxShadow: fifaTheme.shadow,
+        position: "relative",
+        borderRadius: 4,
+        background:
+          "linear-gradient(180deg, rgba(10,15,20,0.65), rgba(5,5,8,0.85))",
+        backdropFilter: "blur(10px)",
+        border: "1px solid rgba(0,255,255,0.35)",
+        boxShadow: `
+          0 0 18px rgba(0,255,255,0.45),
+          0 0 40px rgba(0,255,255,0.25)
+        `,
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          inset: -3,
+          borderRadius: 6,
+          background:
+            "linear-gradient(180deg, rgba(0,255,255,0.6), rgba(0,255,255,0.05))",
+          opacity: 0.25,
+          pointerEvents: "none",
+          zIndex: -1,
+          filter: "blur(10px)",
+        },
       }}
     >
       <CardHeader
-        title={<Typography sx={{ color: fifaTheme.textPrimary, fontWeight: 900 }}>{leagueTitle} — Predict</Typography>}
-        subheader={<Typography sx={{ color: fifaTheme.textMuted }}>{matches.length} matches</Typography>}
-        sx={{ background: "rgba(255,255,255,0.02)" }}
+        title={
+          <Typography
+            sx={{
+              fontWeight: 900,
+              textAlign: "center",
+              color: "#fff",
+              letterSpacing: 1,
+              textShadow: "0 0 14px rgba(0,255,255,0.7)",
+            }}
+          >
+            {leagueTitle}
+          </Typography>
+        }
       />
+
       <CardContent>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          {matches.map((m, index) => {
-            const id = m.id || `${m.teamA || m.homeTeam}-${m.teamB || m.awayTeam}-${index}`;
-            const s = local[id] || { A: "", B: "", penaltyWinner: "", submitted: false, submitting: false };
-            return (
-              <Box
-                key={id}
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  py: 1,
-                  px: 1.5,
-                  borderRadius: 2,
-                  background: s.submitted ? "rgba(255, 0, 140, 0.86)" : "rgba(0, 255, 255, 0.05)",
-                  border: `1px solid rgba(255, 255, 255, 0.03)`,
-                }}
-              >
-                <Box sx={{ display: "flex", alignItems: "center", gap: 2, minWidth: 180 }}>
-                  <FifaFlag team={m.teamA || m.homeTeam} size={26} />
-                  <Typography sx={{ color: fifaTheme.textPrimary, fontWeight: 800 }}>{m.teamA || m.homeTeam}</Typography>
+        {matches.map((m, idx) => {
+          const id = m.match || m.id || `${m.teamA}-${m.teamB}-${idx}`;
+          const s = local[id] || {};
+          const isTie =
+            s.scoreA !== "" &&
+            s.scoreB !== "" &&
+            Number(s.scoreA) === Number(s.scoreB);
+
+          return (
+            <Box
+              key={id}
+              sx={{
+                mb: 2.5,
+                pb: 1.8,
+                borderBottom: "1px solid rgba(0,255,255,0.25)",
+              }}
+            >
+              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                {/* TEAM A */}
+                <Box sx={{ display: "flex", gap: 1.5, minWidth: 220 }}>
+                  <Box sx={{ width: 36 }}>
+                    <FifaFlag team={m.teamA} />
+                  </Box>
+                  <Typography
+                    sx={{
+                      color: "#fff",
+                      fontWeight: 700,
+                      ml: 0.5,
+                      textShadow: "0 0 8px rgba(0,255,255,0.5)",
+                    }}
+                  >
+                    {m.teamA}
+                  </Typography>
                 </Box>
 
-                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                {/* SCORES */}
+                <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
                   <TextField
-                    inputProps={{ inputMode: "numeric", pattern: "[0-9]*", style: { textAlign: "center", fontWeight: 800 } }}
-                    size="small"
-                    value={s.A ?? ""}
-                    onChange={(e) => updateValue(id, "A", e.target.value.replace(/[^\d]/g, ""))}
-                    sx={{ width: 64, bgcolor: "rgba(243, 18, 18, 0.03)", borderRadius: 1 }}
+                    value={s.scoreA}
                     disabled={disabled || s.submitted}
-                    inputRef={(el) => (refs.current[id] = { ...(refs.current[id] || {}), A: el })}
+                    onChange={(e) =>
+                      setLocal((p) => ({
+                        ...p,
+                        [id]: {
+                          ...p[id],
+                          scoreA: e.target.value.replace(/\D/g, ""),
+                        },
+                      }))
+                    }
+                    onKeyDown={(e) => handleKeyDown(e, id, "A")}
+                    inputRef={(el) =>
+                      (refs.current[id] = {
+                        ...(refs.current[id] || {}),
+                        A: el,
+                      })
+                    }
+                    sx={{
+                      width: 64,
+                      "& .MuiOutlinedInput-root": {
+                        backgroundColor: "rgba(0,0,0,0.35)", 
+                        borderRadius: 2,
+                      },
+                    }}
+                    inputProps={{
+                      style: {
+                        textAlign: "center",
+                        fontWeight: 900,
+                        fontSize: 14,        
+                        lineHeight: "24px",
+                        color: "#ffffff",     
+                        WebkitTextFillColor: "#ffffff", 
+                        textShadow: `
+                          0 0 6px rgba(0,255,255,0.9),
+                          0 0 12px rgba(0,255,255,0.9),
+                          0 0 20px rgba(0,255,255,0.6)
+                        `,
+                      },
+                    }}  
                   />
 
-                  <Typography sx={{ fontWeight: 900, color: fifaTheme.textPrimary }}>—</Typography>
+                  <Typography
+                    sx={{
+                      color: "#ffffff",
+                      fontWeight: 900,
+                      textShadow: `
+                        0 0 6px rgba(0,255,255,0.9),
+                        0 0 12px rgba(0,255,255,0.7)
+                      `,
+                    }}
+                  >
+                    v/s
+                  </Typography>
 
                   <TextField
-                    inputProps={{ inputMode: "numeric", pattern: "[0-9]*", style: { textAlign: "center", fontWeight: 800 } }}
-                    size="small"
-                    value={s.B ?? ""}
-                    onChange={(e) => updateValue(id, "B", e.target.value.replace(/[^\d]/g, ""))}
-                    sx={{ width: 64, bgcolor: "rgba(255,255,255,0.03)", borderRadius: 1 }}
+                    type="text"
+                    value={s.scoreB}
                     disabled={disabled || s.submitted}
-                    inputRef={(el) => (refs.current[id] = { ...(refs.current[id] || {}), B: el })}
+                    onChange={(e) =>
+                      setLocal((p) => ({
+                        ...p,
+                        [id]: {
+                          ...p[id],
+                          scoreB: e.target.value.replace(/\D/g, ""),
+                        },
+                      }))
+                    }
+                    onKeyDown={(e) => handleKeyDown(e, id, "B")}
+                    inputRef={(el) =>
+                      (refs.current[id] = {
+                        ...(refs.current[id] || {}),
+                        B: el,
+                      })
+                    }
+                    sx={{
+                      width: 64,
+                      "& .MuiOutlinedInput-root": {
+                        backgroundColor: "rgba(0,0,0,0.35)",
+                        borderRadius: 2,
+                      },
+                    }}
+                    inputProps={{
+                      style: {
+                        textAlign: "center",
+                        fontWeight: 900,
+                        fontSize: 14,
+                        lineHeight: "24px",
+                        color: "#ffffff",
+                        WebkitTextFillColor: "#ffffff",
+                        textShadow: `
+                          0 0 6px rgba(0,255,255,0.9),
+                          0 0 12px rgba(0,255,255,0.9),
+                          0 0 20px rgba(0,255,255,0.6)
+                        `,
+                      },
+                    }}
                   />
                 </Box>
 
-                <Box sx={{ display: "flex", alignItems: "center", gap: 2, minWidth: 180, justifyContent: "flex-end" }}>
-                  {/* Penalty dropdown — shown if both scores present & tied */}
-                  {s.A !== "" && s.B !== "" && Number(s.A) === Number(s.B) ? (
-                    <TextField
-                      select
-                      size="small"
-                      value={s.penaltyWinner || ""}
-                      onChange={(e) => updateValue(id, "penaltyWinner", e.target.value)}
-                      sx={{ minWidth: 160, bgcolor: "rgba(255,255,255,0.02)", borderRadius: 1 }}
-                      helperText={s.penaltyWinner ? "Penalty winner selected — auto-submitting" : "Choose penalty winner"}
-                      inputRef={(el) => (refs.current[id] = { ...(refs.current[id] || {}), penalty: el })}
-                      disabled={disabled || s.submitted}
-                    >
-                      <MenuItem value="">{/* placeholder */}</MenuItem>
-                      <MenuItem value={m.teamA || m.homeTeam}>{m.teamA || m.homeTeam}</MenuItem>
-                      <MenuItem value={m.teamB || m.awayTeam}>{m.teamB || m.awayTeam}</MenuItem>
-                    </TextField>
-                  ) : (
-                    <>
-                      <Typography sx={{ color: fifaTheme.textPrimary, fontWeight: 800 }}>{m.teamB || m.awayTeam}</Typography>
-                      <FifaFlag team={m.teamB || m.awayTeam} size={26} />
-                    </>
-                  )}
+                {/* TEAM B */}
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: 1.5,
+                    minWidth: 220,
+                    justifyContent: "flex-end",
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      color: "#fff",
+                      fontWeight: 700,
+                      mr: 0.5,
+                      textShadow: "0 0 8px rgba(0,255,255,0.5)",
+                    }}
+                  >
+                    {m.teamB}
+                  </Typography>
+                  <Box sx={{ width: 36 }}>
+                    <FifaFlag team={m.teamB} />
+                  </Box>
                 </Box>
               </Box>
-            );
-          })}
-        </Box>
+
+              {/* PENALTY */}
+              {mode === "playoff" && isTie && (
+                <Box sx={{ mt: 2, textAlign: "center" }}>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      display: "block",
+                      mb: 0.75,              
+                      fontWeight: 800,
+                      letterSpacing: 0.4,
+                      color: "#ffffff",
+                      textTransform: "uppercase",
+                      textShadow: `
+                        0 0 6px rgba(0,255,255,0.4),
+                        0 0 12px rgba(0,255,255,0.3),
+                        0 0 20px rgba(0,255,255,0.5)
+                      `,
+                    }}
+                  >
+                    Penalty Winner
+                  </Typography>
+
+
+                  <TextField
+                    select
+                    size="small"
+                    sx={{
+                      mt: 0.5,
+                      width: 220,
+                      "& .MuiOutlinedInput-root": {
+                        backgroundColor: "rgba(0,0,0,0.6)",
+                        color: "#00ffff",
+                        "& fieldset": { borderColor: "#00ffff" },
+                      },
+                    }}
+                    value={s.penaltyWinner}
+                    onChange={(e) =>
+                      submit(id, { penaltyWinner: e.target.value })
+                    }
+                    inputRef={(el) =>
+                      (refs.current[id] = {
+                        ...(refs.current[id] || {}),
+                        penalty: el,
+                      })
+                    }
+                  >
+                    <MenuItem value={m.teamA}>{m.teamA}</MenuItem>
+                    <MenuItem value={m.teamB}>{m.teamB}</MenuItem>
+                  </TextField>
+                </Box>
+              )}
+            </Box>
+          );
+        })}
       </CardContent>
     </Card>
   );

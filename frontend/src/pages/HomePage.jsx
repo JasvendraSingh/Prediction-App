@@ -15,7 +15,6 @@ import {
   leagueFullNames,
   backgroundGradients,
 } from "../constants/leagueConstants";
-
 import { downloadLeaguePDF, saveAllPredictionsToIPFS } from "../api/leaguesApi";
 
 import LeagueSelector from "../components/LeagueSelector";
@@ -49,6 +48,7 @@ const HomePage = () => {
     handleReset,
   } = useLeagueData(league === "fifa2026" ? null : league);
 
+  /* FIFA 2026 redirect logic */
   useEffect(() => {
     if (league === "fifa2026") {
       navigate("/fifa/playoffs");
@@ -64,7 +64,10 @@ const HomePage = () => {
   const handleNavigate = (direction) => {
     if (direction === "back" && currentDayIndex > 0) {
       setCurrentDayIndex((prev) => prev - 1);
-    } else if (direction === "next" && currentDayIndex < matchdayKeys.length - 1) {
+    } else if (
+      direction === "next" &&
+      currentDayIndex < matchdayKeys.length - 1
+    ) {
       setCurrentDayIndex((prev) => prev + 1);
     }
   };
@@ -90,26 +93,25 @@ const HomePage = () => {
       setUpdatedTable(result.table);
     }
 
-    const isLast = currentDayIndex === matchdayKeys.length - 1;
+    const isLastMatchday = currentDayIndex === matchdayKeys.length - 1;
 
-    if (isLast) {
-      if (result?.table) {
-        setFinalTable(result.table);
-        const storedUsername =
-          localStorage.getItem("username") || username || "guest";
+    if (isLastMatchday && result?.table) {
+      setFinalTable(result.table);
 
-        const key = `predictions_${storedUsername}_${league.toUpperCase()}`;
-        const allPreds = JSON.parse(localStorage.getItem(key) || "{}");
+      const storedUsername =
+        localStorage.getItem("username") || username || "guest";
 
-        try {
-          await saveAllPredictionsToIPFS(
-            league.toLowerCase(),
-            storedUsername,
-            allPreds
-          );
-        } catch (e) {
-          console.error("Failed to save predictions:", e);
-        }
+      const key = `predictions_${storedUsername}_${league.toUpperCase()}`;
+      const allPreds = JSON.parse(localStorage.getItem(key) || "{}");
+
+      try {
+        await saveAllPredictionsToIPFS(
+          league.toLowerCase(),
+          storedUsername,
+          allPreds
+        );
+      } catch (e) {
+        console.error("Failed to save predictions to IPFS:", e);
       }
     } else {
       handleNavigate("next");
@@ -130,6 +132,7 @@ const HomePage = () => {
       const url = window.URL.createObjectURL(
         new Blob([pdfBlob], { type: "application/pdf" })
       );
+
       const link = document.createElement("a");
       link.href = url;
       link.setAttribute("download", `${league}_table.pdf`);
@@ -150,7 +153,7 @@ const HomePage = () => {
 
   const handleLogin = () => {
     const trimmed = username.trim();
-    if (trimmed !== "") {
+    if (trimmed) {
       localStorage.setItem("username", trimmed);
       setUsername(trimmed);
       setIsLoggedIn(true);
@@ -168,10 +171,10 @@ const HomePage = () => {
   const currentMatches = matchdays[currentMatchday];
   const displayTable = updatedTable || initialTable;
 
-  const getBgColor = () => {
-    return backgroundGradients[league] || backgroundGradients.default;
-  };
+  const getBgColor = () =>
+    backgroundGradients[league] || backgroundGradients.default;
 
+  /* LOGIN SCREEN */
   if (!isLoggedIn) {
     return (
       <Box
@@ -183,6 +186,8 @@ const HomePage = () => {
           justifyContent: "center",
           flexDirection: "column",
           textAlign: "center",
+          position: "relative",
+          overflow: "hidden",
         }}
       >
         <Typography
@@ -190,35 +195,42 @@ const HomePage = () => {
           sx={{
             color: "white",
             fontWeight: 900,
-            mb: 3,
+            textTransform: "uppercase",
             letterSpacing: "0.1em",
+            mb: 3,
           }}
         >
           Predict
         </Typography>
 
         <TextField
-          variant="outlined"
           label="Enter Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           sx={{
             input: { color: "white" },
             label: { color: "#aaa" },
+            fieldset: { borderColor: "#555" },
             mb: 3,
+            width: 260,
           }}
         />
 
         <Button
           variant="contained"
-          onClick={handleLogin}
-          sx={{
-            backgroundColor: leagueColors[league] || "#00ff88",
-            px: 5,
-            py: 1.5,
-            fontWeight: "bold",
-            color: "white",
-          }}
+              color="primary"
+              sx={{
+                fontWeight: "bold",
+                textTransform: "uppercase",
+                px: 5,
+                py: 1.5,
+                borderRadius: 3,
+                backgroundColor: leagueColors[league] || "#00ff88",
+                filter: `drop-shadow(0 0 20px ${
+                  leagueColors[league] || "#00ff88"
+                })`,
+              }}
+              onClick={handleLogin}
         >
           Enter
         </Button>
@@ -226,62 +238,86 @@ const HomePage = () => {
     );
   }
 
+  /* MAIN PAGE */
   return (
     <Box
       sx={{
         minHeight: "100vh",
         background: getBgColor(),
+        transition: "background 0.8s ease",
         py: 4,
         px: 2,
+        position: "relative",
+        overflow: "hidden",
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          right: 0,
+          width: "50%",
+          height: "100%",
+          background: `repeating-conic-gradient(from 0deg at 50% 50%, transparent 0deg, ${
+            leagueColors[league] || "#00ff88"
+          }10 2deg, transparent 4deg)`,
+          opacity: 0.1,
+          zIndex: 0,
+        },
       }}
     >
-      <Container maxWidth="xl">
+      <Container maxWidth="xl" sx={{ position: "relative", zIndex: 1 }}>
+
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Typography
             variant="h2"
             sx={{
               color: "white",
               fontWeight: 900,
+              fontSize: { xs: "2.5rem", md: "3.5rem" },
               textTransform: "uppercase",
               letterSpacing: "0.1em",
+              mb: 1,
             }}
           >
-            Predict
+            PREDICT
           </Typography>
-
           <Box
             sx={{
+              display: "inline-block",
               backgroundColor: leagueColors[league] || "#020b8aff",
               color: "white",
               px: 3,
               py: 1,
-              mt: 2,
-              display: "inline-block",
-              fontSize: "1.6rem",
+              borderRadius: "8px",
               fontWeight: 800,
-              letterSpacing: "0.15em",
-              borderRadius: 2,
+              fontSize: { xs: "1.5rem", md: "2rem" },
+              letterSpacing: "0.2em",
+              mb: 2,
             }}
           >
             {leagueFullNames[league] || "League"}
           </Box>
+          {/* Username greeting */}
+        <Typography
+          variant="h5"
+          sx={{
+            color: "#fff",
+            textAlign: "center",
+            mb: 2,
+            fontWeight: 500,
+            fontSize: 16
+          }}
+        >
+                Current User: {username}
+          </Typography>
         </Box>
 
-        <Typography
-          variant="h6"
-          sx={{ color: "white", textAlign: "center", mb: 2 }}
-        >
-          Current User: {username}
-        </Typography>
-
-        {/* League selector ALWAYS shown */}
         <LeagueSelector league={league} onLeagueChange={handleLeagueChange} />
 
         {loading && (
           <Box textAlign="center" mt={4}>
             <CircularProgress
               size={60}
-              sx={{ color: leagueColors[league] || "white" }}
+              sx={{ color: leagueColors[league] || "#fff" }}
             />
           </Box>
         )}
@@ -310,6 +346,7 @@ const HomePage = () => {
                 onNavigate={handleNavigate}
                 onSubmit={handleSubmitPredictions}
               />
+
               <CompactLeagueTable
                 tableData={displayTable}
                 league={league}
@@ -340,6 +377,31 @@ const HomePage = () => {
             />
           )}
       </Container>
+
+      {!league && (
+        <Box
+          sx={{
+            position: "fixed",
+            bottom: 20,
+            left: "50%",
+            transform: "translateX(-50%)",
+            zIndex: 10,
+          }}
+        >
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={handleLogout}
+            sx={{
+              textTransform: "none",
+              borderRadius: 2,
+              px: 4,
+            }}
+          >
+            Logout
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 };

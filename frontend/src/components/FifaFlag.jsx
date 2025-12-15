@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import COUNTRY_CODES from "../data/countryCodes.json";
 
 const FALLBACK_IMG =
   "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
@@ -8,15 +9,21 @@ export default function FifaFlag({ team, size = 28 }) {
 
   if (!team) return null;
 
-  const slug = team
-    .toLowerCase()
-    .replace(/\s+/g, "-")
-    .replace(/’/g, "")
-    .replace(/'/g, "")
-    .replace(/ö/g, "o")
-    .replace(/ç/g, "c");
+  const key = team.trim().toLowerCase();
 
-  const url = !error ? `https://flagcdn.com/w40/${slug}.png` : FALLBACK_IMG;
+  const code =
+    COUNTRY_CODES[team] ||
+    COUNTRY_CODES[team.toLowerCase()] ||
+    COUNTRY_CODES[
+      Object.keys(COUNTRY_CODES).find(
+        (k) => k.toLowerCase() === key
+      )
+    ];
+
+  const url =
+    code && !error
+      ? `https://flagcdn.com/w40/${code}.png`
+      : FALLBACK_IMG;
 
   return (
     <img
@@ -28,8 +35,7 @@ export default function FifaFlag({ team, size = 28 }) {
         height: size,
         objectFit: "cover",
         borderRadius: 4,
-        backgroundColor: "transparent",
-        display: "inline-block",
+        display: "inline-block"
       }}
     />
   );
