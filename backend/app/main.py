@@ -35,12 +35,17 @@ if not origins:
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=list(origins),
+    allow_origins=[
+        "http://localhost:5173",
+        "http://localhost:8000",
+        "https://*.app.github.dev",
+    ],
+    allow_origin_regex=r"https://.*\.app\.github\.dev",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-    expose_headers=["*"]
 )
+
 
 app.include_router(fifa2026_router, prefix="/api/fifa2026")  # <-- REQUIRED
 app.include_router(uefa_router, prefix="/api")
