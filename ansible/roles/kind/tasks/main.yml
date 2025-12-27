@@ -1,0 +1,6 @@
+- name: Create kind cluster
+  command: kind create cluster --name kind
+  ignore_errors: true
+
+- name: Export kubeconfig
+  command: kind export kubeconfig --name kind

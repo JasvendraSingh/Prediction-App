@@ -1,0 +1,9 @@
+- hosts: local
+  become: false
+  roles:
+    - docker
+    - kubectl
+    - kind
+    - helm
+    - argocd
+    - monitoring

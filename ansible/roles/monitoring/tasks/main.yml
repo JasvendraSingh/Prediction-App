@@ -1,0 +1,40 @@
+- name: Add Prometheus Helm repo
+  shell: helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+  args:
+    creates: /tmp/prometheus-repo-added
+  register: prometheus_repo
+  changed_when: "'has been added' in prometheus_repo.stdout"
+
+- name: Add Grafana Helm repo
+  shell: helm repo add grafana https://grafana.github.io/helm-charts
+  args:
+    creates: /tmp/grafana-repo-added
+  register: grafana_repo
+  changed_when: "'has been added' in grafana_repo.stdout"
+
+- name: Update Helm repos
+  shell: helm repo update
+  changed_when: false
+
+- name: Ensure monitoring namespace exists
+  shell: kubectl get ns monitoring || kubectl create ns monitoring
+  become: false
+
+- name: Install / Upgrade Prometheus
+  shell: |
+    helm upgrade --install prometheus \
+      prometheus-community/prometheus \
+      --namespace monitoring \
+      --set server.service.type=NodePort \
+      --set server.service.nodePort=30090
+  become: false
+
+- name: Install / Upgrade Grafana
+  shell: |
+    helm upgrade --install grafana \
+      grafana/grafana \
+      --namespace monitoring \
+      --set service.type=NodePort \
+      --set service.nodePort=30030 \
+      --set adminPassword=admin
+  become: false

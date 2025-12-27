@@ -5,3 +5,4 @@ beautifulsoup4
 reportlab
 pydantic
 python-multipart
+prometheus-client

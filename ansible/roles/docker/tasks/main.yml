@@ -1,0 +1,15 @@
+- name: Verify Docker is available
+  command: docker version
+  register: docker_check
+  changed_when: false
+
+- name: Fail if Docker is not present
+  fail:
+    msg: Docker is not available in this environment
+  when: docker_check.rc != 0
+
+- name: Add vscode user to docker group
+  user:
+    name: vscode
+    groups: docker
+    append: yes

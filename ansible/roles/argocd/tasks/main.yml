@@ -1,0 +1,9 @@
+- name: Verify cluster access
+  command: kubectl get nodes
+
+- name: Create argocd namespace
+  command: kubectl create namespace argocd
+  ignore_errors: true
+
+- name: Install ArgoCD
+  command: kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
