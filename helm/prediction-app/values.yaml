@@ -4,9 +4,9 @@ backend:
   name: backend
   replicas: 2
   image:
-    repository: prediction-backend
-    tag: local
-    pullPolicy: IfNotPresent
+    repository: ghcr.io/jasvendrasingh/prediction-backend
+    tag: latest
+    pullPolicy: Always
   port: 8000
   hpa:
     enabled: true
@@ -18,8 +18,8 @@ frontend:
   name: frontend
   replicas: 1
   image:
-    repository: prediction-frontend
-    tag: local
-    pullPolicy: IfNotPresent
+    repository: ghcr.io/jasvendrasingh/prediction-frontend
+    tag: latest
+    pullPolicy: Always
   port: 80
   nodePort: 30007
