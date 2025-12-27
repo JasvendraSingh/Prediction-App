@@ -15,7 +15,6 @@ coverage
 *.log
 .env
 .env.*  
-# Ignore tests output folder
 tests/output/
 cache/
 **/__pycache__/.env
@@ -25,3 +24,9 @@ tests/output.xml
 tests/report.html
 browser
 bin
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.backup
+.kube/
+node_modules/
+__pycache__/
