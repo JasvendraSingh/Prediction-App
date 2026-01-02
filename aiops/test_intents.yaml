@@ -1,0 +1,45 @@
+auth:
+  page: Login
+  url: /
+  actions:
+    - enter username
+    - submit login
+  assertions:
+    - user is logged in
+    - redirected to league selection
+  negative:
+    - empty username
+    - direct access without login
+
+league_selection:
+  page: League Selector
+  actions:
+    - select UCFL
+    - select UEL
+    - select UCL
+  assertions:
+    - matchday loads
+  negative:
+    - switch league mid prediction
+
+prediction:
+  page: Matchday Prediction
+  actions:
+    - enter scores
+    - navigate next
+  assertions:
+    - inputs accepted
+  negative:
+    - negative scores
+    - large scores
+    - empty submit
+    - no league table update
+
+results:
+  page: Results
+  actions:
+    - finish prediction
+    - download pdf
+  assertions:
+    - table visible
+    - rows present

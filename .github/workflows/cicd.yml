@@ -15,13 +15,12 @@ env:
   OWNER: jasvendrasingh
   IMAGE_BACKEND: prediction-backend
   IMAGE_FRONTEND: prediction-frontend
+  OLLAMA_HOST: http://localhost:11434
 
+# 1. TEST + AI (FAILURES ALLOWED, INTELLIGENCE REQUIRED)
 jobs:
-# --------------------------------------------------
-# 1. TEST (FAILURE DOES NOT BLOCK PIPELINE)
-# --------------------------------------------------
   test:
-    name: Run Docker Integration Tests
+    name: Run Tests + AI Analysis
     runs-on: ubuntu-latest
     continue-on-error: true
 
@@ -36,16 +35,38 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+      # Ollama (local LLM)
+      - name: Install Ollama
+        run: curl -fsSL https://ollama.com/install.sh | sh
 
+      - name: Start Ollama
+        run: |
+          ollama serve &
+          sleep 15
+
+      - name: Pull model
+        run: ollama pull qwen2.5:3b
+      # AI GENERATED TESTS
       - name: Generate AI tests
-        run: python aiops/test_generator.py
-
+        run: |
+          python aiops/test_generator.py
+      # Run Robot Tests (Docker)
       - name: Run tests with compose stack
         run: |
           docker compose -f docker-compose.yml -f docker-compose.test.yml up \
             --abort-on-container-exit \
             --exit-code-from test
+      # FAILURE-DRIVEN AI
+      - name: Generate AI regression tests from failures
+        if: always()
+        run: |
+          python aiops/failure_analyzer.py
 
+      - name: Self-heal selectors
+        if: always()
+        run: |
+          python aiops/selector_healer.py
+      # ARTIFACTS
       - name: Upload Robot test artifacts
         if: always()
         uses: actions/upload-artifact@v4
@@ -58,9 +79,7 @@ jobs:
         run: |
           docker compose -f docker-compose.yml -f docker-compose.test.yml down -v
 
-# --------------------------------------------------
-# 2. BUILD, SCAN & PUSH IMAGES
-# --------------------------------------------------
+# 2. BUILD & PUSH IMAGES (ALWAYS)
   build_and_push:
     name: Build, Scan & Push Images
     runs-on: ubuntu-latest
@@ -76,44 +95,63 @@ jobs:
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io \
             -u ${{ github.actor }} --password-stdin
 
-      - name: Build & push backend image
+      - name: Build & push backend
         run: |
           docker build -t $REGISTRY/$OWNER/$IMAGE_BACKEND:latest backend
           docker push $REGISTRY/$OWNER/$IMAGE_BACKEND:latest
 
-      - name: Scan backend image (Trivy)
+      - name: Scan backend image
         uses: aquasecurity/trivy-action@0.20.0
         with:
           image-ref: ghcr.io/jasvendrasingh/prediction-backend:latest
           severity: CRITICAL,HIGH
           exit-code: 0
 
-      - name: Build & push frontend image
+      - name: Build & push frontend
         run: |
           docker build -t $REGISTRY/$OWNER/$IMAGE_FRONTEND:latest frontend
           docker push $REGISTRY/$OWNER/$IMAGE_FRONTEND:latest
 
-# --------------------------------------------------
-# 3. GITOPS: UPDATE HELM VALUES
-# --------------------------------------------------
-  gitops_update:
-    name: Update Helm values (GitOps)
+# 3. AI QUALITY GATE (DECIDES DEPLOY)
+  ai_gate:
+    name: AI Deployment Decision
     runs-on: ubuntu-latest
     needs: build_and_push
-    if: always()
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Update backend image in Helm values
+      - name: Run AI deployment gate
+        run: |
+          python aiops/deployment_gate.py
+
+      - name: Block deployment if AI says NO
+        run: |
+          decision=$(cat aiops/deploy_decision.txt)
+          if [ "$decision" = "BLOCK_DEPLOYMENT" ]; then
+            echo " AI blocked deployment"
+            exit 1
+          fi
+
+# 4. GITOPS UPDATE (ONLY IF AI ALLOWS)
+  gitops_update:
+    name: Update Helm values (GitOps)
+    runs-on: ubuntu-latest
+    needs: ai_gate
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update backend image
         run: |
           sed -i "/backend:/,/image:/ s|repository: .*|repository: ghcr.io/jasvendrasingh/prediction-backend|" \
             helm/prediction-app/values.yaml
           sed -i "/backend:/,/image:/ s|tag: .*|tag: latest|" \
             helm/prediction-app/values.yaml
 
-      - name: Update frontend image in Helm values
+      - name: Update frontend image
         run: |
           sed -i "/frontend:/,/image:/ s|repository: .*|repository: ghcr.io/jasvendrasingh/prediction-frontend|" \
             helm/prediction-app/values.yaml
