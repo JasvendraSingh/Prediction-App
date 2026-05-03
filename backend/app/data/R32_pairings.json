@@ -1,0 +1,2487 @@
+{
+    "tournament": "FIFA World Cup 2026",
+    "round": "Round of 32",
+    "total_pairings": 496,
+    "pairings": [
+        {
+            "pairing_id": 1,
+            "team_1": "Team_1",
+            "team_2": "Team_2"
+        },
+        {
+            "pairing_id": 2,
+            "team_1": "Team_1",
+            "team_2": "Team_3"
+        },
+        {
+            "pairing_id": 3,
+            "team_1": "Team_1",
+            "team_2": "Team_4"
+        },
+        {
+            "pairing_id": 4,
+            "team_1": "Team_1",
+            "team_2": "Team_5"
+        },
+        {
+            "pairing_id": 5,
+            "team_1": "Team_1",
+            "team_2": "Team_6"
+        },
+        {
+            "pairing_id": 6,
+            "team_1": "Team_1",
+            "team_2": "Team_7"
+        },
+        {
+            "pairing_id": 7,
+            "team_1": "Team_1",
+            "team_2": "Team_8"
+        },
+        {
+            "pairing_id": 8,
+            "team_1": "Team_1",
+            "team_2": "Team_9"
+        },
+        {
+            "pairing_id": 9,
+            "team_1": "Team_1",
+            "team_2": "Team_10"
+        },
+        {
+            "pairing_id": 10,
+            "team_1": "Team_1",
+            "team_2": "Team_11"
+        },
+        {
+            "pairing_id": 11,
+            "team_1": "Team_1",
+            "team_2": "Team_12"
+        },
+        {
+            "pairing_id": 12,
+            "team_1": "Team_1",
+            "team_2": "Team_13"
+        },
+        {
+            "pairing_id": 13,
+            "team_1": "Team_1",
+            "team_2": "Team_14"
+        },
+        {
+            "pairing_id": 14,
+            "team_1": "Team_1",
+            "team_2": "Team_15"
+        },
+        {
+            "pairing_id": 15,
+            "team_1": "Team_1",
+            "team_2": "Team_16"
+        },
+        {
+            "pairing_id": 16,
+            "team_1": "Team_1",
+            "team_2": "Team_17"
+        },
+        {
+            "pairing_id": 17,
+            "team_1": "Team_1",
+            "team_2": "Team_18"
+        },
+        {
+            "pairing_id": 18,
+            "team_1": "Team_1",
+            "team_2": "Team_19"
+        },
+        {
+            "pairing_id": 19,
+            "team_1": "Team_1",
+            "team_2": "Team_20"
+        },
+        {
+            "pairing_id": 20,
+            "team_1": "Team_1",
+            "team_2": "Team_21"
+        },
+        {
+            "pairing_id": 21,
+            "team_1": "Team_1",
+            "team_2": "Team_22"
+        },
+        {
+            "pairing_id": 22,
+            "team_1": "Team_1",
+            "team_2": "Team_23"
+        },
+        {
+            "pairing_id": 23,
+            "team_1": "Team_1",
+            "team_2": "Team_24"
+        },
+        {
+            "pairing_id": 24,
+            "team_1": "Team_1",
+            "team_2": "Team_25"
+        },
+        {
+            "pairing_id": 25,
+            "team_1": "Team_1",
+            "team_2": "Team_26"
+        },
+        {
+            "pairing_id": 26,
+            "team_1": "Team_1",
+            "team_2": "Team_27"
+        },
+        {
+            "pairing_id": 27,
+            "team_1": "Team_1",
+            "team_2": "Team_28"
+        },
+        {
+            "pairing_id": 28,
+            "team_1": "Team_1",
+            "team_2": "Team_29"
+        },
+        {
+            "pairing_id": 29,
+            "team_1": "Team_1",
+            "team_2": "Team_30"
+        },
+        {
+            "pairing_id": 30,
+            "team_1": "Team_1",
+            "team_2": "Team_31"
+        },
+        {
+            "pairing_id": 31,
+            "team_1": "Team_1",
+            "team_2": "Team_32"
+        },
+        {
+            "pairing_id": 32,
+            "team_1": "Team_2",
+            "team_2": "Team_3"
+        },
+        {
+            "pairing_id": 33,
+            "team_1": "Team_2",
+            "team_2": "Team_4"
+        },
+        {
+            "pairing_id": 34,
+            "team_1": "Team_2",
+            "team_2": "Team_5"
+        },
+        {
+            "pairing_id": 35,
+            "team_1": "Team_2",
+            "team_2": "Team_6"
+        },
+        {
+            "pairing_id": 36,
+            "team_1": "Team_2",
+            "team_2": "Team_7"
+        },
+        {
+            "pairing_id": 37,
+            "team_1": "Team_2",
+            "team_2": "Team_8"
+        },
+        {
+            "pairing_id": 38,
+            "team_1": "Team_2",
+            "team_2": "Team_9"
+        },
+        {
+            "pairing_id": 39,
+            "team_1": "Team_2",
+            "team_2": "Team_10"
+        },
+        {
+            "pairing_id": 40,
+            "team_1": "Team_2",
+            "team_2": "Team_11"
+        },
+        {
+            "pairing_id": 41,
+            "team_1": "Team_2",
+            "team_2": "Team_12"
+        },
+        {
+            "pairing_id": 42,
+            "team_1": "Team_2",
+            "team_2": "Team_13"
+        },
+        {
+            "pairing_id": 43,
+            "team_1": "Team_2",
+            "team_2": "Team_14"
+        },
+        {
+            "pairing_id": 44,
+            "team_1": "Team_2",
+            "team_2": "Team_15"
+        },
+        {
+            "pairing_id": 45,
+            "team_1": "Team_2",
+            "team_2": "Team_16"
+        },
+        {
+            "pairing_id": 46,
+            "team_1": "Team_2",
+            "team_2": "Team_17"
+        },
+        {
+            "pairing_id": 47,
+            "team_1": "Team_2",
+            "team_2": "Team_18"
+        },
+        {
+            "pairing_id": 48,
+            "team_1": "Team_2",
+            "team_2": "Team_19"
+        },
+        {
+            "pairing_id": 49,
+            "team_1": "Team_2",
+            "team_2": "Team_20"
+        },
+        {
+            "pairing_id": 50,
+            "team_1": "Team_2",
+            "team_2": "Team_21"
+        },
+        {
+            "pairing_id": 51,
+            "team_1": "Team_2",
+            "team_2": "Team_22"
+        },
+        {
+            "pairing_id": 52,
+            "team_1": "Team_2",
+            "team_2": "Team_23"
+        },
+        {
+            "pairing_id": 53,
+            "team_1": "Team_2",
+            "team_2": "Team_24"
+        },
+        {
+            "pairing_id": 54,
+            "team_1": "Team_2",
+            "team_2": "Team_25"
+        },
+        {
+            "pairing_id": 55,
+            "team_1": "Team_2",
+            "team_2": "Team_26"
+        },
+        {
+            "pairing_id": 56,
+            "team_1": "Team_2",
+            "team_2": "Team_27"
+        },
+        {
+            "pairing_id": 57,
+            "team_1": "Team_2",
+            "team_2": "Team_28"
+        },
+        {
+            "pairing_id": 58,
+            "team_1": "Team_2",
+            "team_2": "Team_29"
+        },
+        {
+            "pairing_id": 59,
+            "team_1": "Team_2",
+            "team_2": "Team_30"
+        },
+        {
+            "pairing_id": 60,
+            "team_1": "Team_2",
+            "team_2": "Team_31"
+        },
+        {
+            "pairing_id": 61,
+            "team_1": "Team_2",
+            "team_2": "Team_32"
+        },
+        {
+            "pairing_id": 62,
+            "team_1": "Team_3",
+            "team_2": "Team_4"
+        },
+        {
+            "pairing_id": 63,
+            "team_1": "Team_3",
+            "team_2": "Team_5"
+        },
+        {
+            "pairing_id": 64,
+            "team_1": "Team_3",
+            "team_2": "Team_6"
+        },
+        {
+            "pairing_id": 65,
+            "team_1": "Team_3",
+            "team_2": "Team_7"
+        },
+        {
+            "pairing_id": 66,
+            "team_1": "Team_3",
+            "team_2": "Team_8"
+        },
+        {
+            "pairing_id": 67,
+            "team_1": "Team_3",
+            "team_2": "Team_9"
+        },
+        {
+            "pairing_id": 68,
+            "team_1": "Team_3",
+            "team_2": "Team_10"
+        },
+        {
+            "pairing_id": 69,
+            "team_1": "Team_3",
+            "team_2": "Team_11"
+        },
+        {
+            "pairing_id": 70,
+            "team_1": "Team_3",
+            "team_2": "Team_12"
+        },
+        {
+            "pairing_id": 71,
+            "team_1": "Team_3",
+            "team_2": "Team_13"
+        },
+        {
+            "pairing_id": 72,
+            "team_1": "Team_3",
+            "team_2": "Team_14"
+        },
+        {
+            "pairing_id": 73,
+            "team_1": "Team_3",
+            "team_2": "Team_15"
+        },
+        {
+            "pairing_id": 74,
+            "team_1": "Team_3",
+            "team_2": "Team_16"
+        },
+        {
+            "pairing_id": 75,
+            "team_1": "Team_3",
+            "team_2": "Team_17"
+        },
+        {
+            "pairing_id": 76,
+            "team_1": "Team_3",
+            "team_2": "Team_18"
+        },
+        {
+            "pairing_id": 77,
+            "team_1": "Team_3",
+            "team_2": "Team_19"
+        },
+        {
+            "pairing_id": 78,
+            "team_1": "Team_3",
+            "team_2": "Team_20"
+        },
+        {
+            "pairing_id": 79,
+            "team_1": "Team_3",
+            "team_2": "Team_21"
+        },
+        {
+            "pairing_id": 80,
+            "team_1": "Team_3",
+            "team_2": "Team_22"
+        },
+        {
+            "pairing_id": 81,
+            "team_1": "Team_3",
+            "team_2": "Team_23"
+        },
+        {
+            "pairing_id": 82,
+            "team_1": "Team_3",
+            "team_2": "Team_24"
+        },
+        {
+            "pairing_id": 83,
+            "team_1": "Team_3",
+            "team_2": "Team_25"
+        },
+        {
+            "pairing_id": 84,
+            "team_1": "Team_3",
+            "team_2": "Team_26"
+        },
+        {
+            "pairing_id": 85,
+            "team_1": "Team_3",
+            "team_2": "Team_27"
+        },
+        {
+            "pairing_id": 86,
+            "team_1": "Team_3",
+            "team_2": "Team_28"
+        },
+        {
+            "pairing_id": 87,
+            "team_1": "Team_3",
+            "team_2": "Team_29"
+        },
+        {
+            "pairing_id": 88,
+            "team_1": "Team_3",
+            "team_2": "Team_30"
+        },
+        {
+            "pairing_id": 89,
+            "team_1": "Team_3",
+            "team_2": "Team_31"
+        },
+        {
+            "pairing_id": 90,
+            "team_1": "Team_3",
+            "team_2": "Team_32"
+        },
+        {
+            "pairing_id": 91,
+            "team_1": "Team_4",
+            "team_2": "Team_5"
+        },
+        {
+            "pairing_id": 92,
+            "team_1": "Team_4",
+            "team_2": "Team_6"
+        },
+        {
+            "pairing_id": 93,
+            "team_1": "Team_4",
+            "team_2": "Team_7"
+        },
+        {
+            "pairing_id": 94,
+            "team_1": "Team_4",
+            "team_2": "Team_8"
+        },
+        {
+            "pairing_id": 95,
+            "team_1": "Team_4",
+            "team_2": "Team_9"
+        },
+        {
+            "pairing_id": 96,
+            "team_1": "Team_4",
+            "team_2": "Team_10"
+        },
+        {
+            "pairing_id": 97,
+            "team_1": "Team_4",
+            "team_2": "Team_11"
+        },
+        {
+            "pairing_id": 98,
+            "team_1": "Team_4",
+            "team_2": "Team_12"
+        },
+        {
+            "pairing_id": 99,
+            "team_1": "Team_4",
+            "team_2": "Team_13"
+        },
+        {
+            "pairing_id": 100,
+            "team_1": "Team_4",
+            "team_2": "Team_14"
+        },
+        {
+            "pairing_id": 101,
+            "team_1": "Team_4",
+            "team_2": "Team_15"
+        },
+        {
+            "pairing_id": 102,
+            "team_1": "Team_4",
+            "team_2": "Team_16"
+        },
+        {
+            "pairing_id": 103,
+            "team_1": "Team_4",
+            "team_2": "Team_17"
+        },
+        {
+            "pairing_id": 104,
+            "team_1": "Team_4",
+            "team_2": "Team_18"
+        },
+        {
+            "pairing_id": 105,
+            "team_1": "Team_4",
+            "team_2": "Team_19"
+        },
+        {
+            "pairing_id": 106,
+            "team_1": "Team_4",
+            "team_2": "Team_20"
+        },
+        {
+            "pairing_id": 107,
+            "team_1": "Team_4",
+            "team_2": "Team_21"
+        },
+        {
+            "pairing_id": 108,
+            "team_1": "Team_4",
+            "team_2": "Team_22"
+        },
+        {
+            "pairing_id": 109,
+            "team_1": "Team_4",
+            "team_2": "Team_23"
+        },
+        {
+            "pairing_id": 110,
+            "team_1": "Team_4",
+            "team_2": "Team_24"
+        },
+        {
+            "pairing_id": 111,
+            "team_1": "Team_4",
+            "team_2": "Team_25"
+        },
+        {
+            "pairing_id": 112,
+            "team_1": "Team_4",
+            "team_2": "Team_26"
+        },
+        {
+            "pairing_id": 113,
+            "team_1": "Team_4",
+            "team_2": "Team_27"
+        },
+        {
+            "pairing_id": 114,
+            "team_1": "Team_4",
+            "team_2": "Team_28"
+        },
+        {
+            "pairing_id": 115,
+            "team_1": "Team_4",
+            "team_2": "Team_29"
+        },
+        {
+            "pairing_id": 116,
+            "team_1": "Team_4",
+            "team_2": "Team_30"
+        },
+        {
+            "pairing_id": 117,
+            "team_1": "Team_4",
+            "team_2": "Team_31"
+        },
+        {
+            "pairing_id": 118,
+            "team_1": "Team_4",
+            "team_2": "Team_32"
+        },
+        {
+            "pairing_id": 119,
+            "team_1": "Team_5",
+            "team_2": "Team_6"
+        },
+        {
+            "pairing_id": 120,
+            "team_1": "Team_5",
+            "team_2": "Team_7"
+        },
+        {
+            "pairing_id": 121,
+            "team_1": "Team_5",
+            "team_2": "Team_8"
+        },
+        {
+            "pairing_id": 122,
+            "team_1": "Team_5",
+            "team_2": "Team_9"
+        },
+        {
+            "pairing_id": 123,
+            "team_1": "Team_5",
+            "team_2": "Team_10"
+        },
+        {
+            "pairing_id": 124,
+            "team_1": "Team_5",
+            "team_2": "Team_11"
+        },
+        {
+            "pairing_id": 125,
+            "team_1": "Team_5",
+            "team_2": "Team_12"
+        },
+        {
+            "pairing_id": 126,
+            "team_1": "Team_5",
+            "team_2": "Team_13"
+        },
+        {
+            "pairing_id": 127,
+            "team_1": "Team_5",
+            "team_2": "Team_14"
+        },
+        {
+            "pairing_id": 128,
+            "team_1": "Team_5",
+            "team_2": "Team_15"
+        },
+        {
+            "pairing_id": 129,
+            "team_1": "Team_5",
+            "team_2": "Team_16"
+        },
+        {
+            "pairing_id": 130,
+            "team_1": "Team_5",
+            "team_2": "Team_17"
+        },
+        {
+            "pairing_id": 131,
+            "team_1": "Team_5",
+            "team_2": "Team_18"
+        },
+        {
+            "pairing_id": 132,
+            "team_1": "Team_5",
+            "team_2": "Team_19"
+        },
+        {
+            "pairing_id": 133,
+            "team_1": "Team_5",
+            "team_2": "Team_20"
+        },
+        {
+            "pairing_id": 134,
+            "team_1": "Team_5",
+            "team_2": "Team_21"
+        },
+        {
+            "pairing_id": 135,
+            "team_1": "Team_5",
+            "team_2": "Team_22"
+        },
+        {
+            "pairing_id": 136,
+            "team_1": "Team_5",
+            "team_2": "Team_23"
+        },
+        {
+            "pairing_id": 137,
+            "team_1": "Team_5",
+            "team_2": "Team_24"
+        },
+        {
+            "pairing_id": 138,
+            "team_1": "Team_5",
+            "team_2": "Team_25"
+        },
+        {
+            "pairing_id": 139,
+            "team_1": "Team_5",
+            "team_2": "Team_26"
+        },
+        {
+            "pairing_id": 140,
+            "team_1": "Team_5",
+            "team_2": "Team_27"
+        },
+        {
+            "pairing_id": 141,
+            "team_1": "Team_5",
+            "team_2": "Team_28"
+        },
+        {
+            "pairing_id": 142,
+            "team_1": "Team_5",
+            "team_2": "Team_29"
+        },
+        {
+            "pairing_id": 143,
+            "team_1": "Team_5",
+            "team_2": "Team_30"
+        },
+        {
+            "pairing_id": 144,
+            "team_1": "Team_5",
+            "team_2": "Team_31"
+        },
+        {
+            "pairing_id": 145,
+            "team_1": "Team_5",
+            "team_2": "Team_32"
+        },
+        {
+            "pairing_id": 146,
+            "team_1": "Team_6",
+            "team_2": "Team_7"
+        },
+        {
+            "pairing_id": 147,
+            "team_1": "Team_6",
+            "team_2": "Team_8"
+        },
+        {
+            "pairing_id": 148,
+            "team_1": "Team_6",
+            "team_2": "Team_9"
+        },
+        {
+            "pairing_id": 149,
+            "team_1": "Team_6",
+            "team_2": "Team_10"
+        },
+        {
+            "pairing_id": 150,
+            "team_1": "Team_6",
+            "team_2": "Team_11"
+        },
+        {
+            "pairing_id": 151,
+            "team_1": "Team_6",
+            "team_2": "Team_12"
+        },
+        {
+            "pairing_id": 152,
+            "team_1": "Team_6",
+            "team_2": "Team_13"
+        },
+        {
+            "pairing_id": 153,
+            "team_1": "Team_6",
+            "team_2": "Team_14"
+        },
+        {
+            "pairing_id": 154,
+            "team_1": "Team_6",
+            "team_2": "Team_15"
+        },
+        {
+            "pairing_id": 155,
+            "team_1": "Team_6",
+            "team_2": "Team_16"
+        },
+        {
+            "pairing_id": 156,
+            "team_1": "Team_6",
+            "team_2": "Team_17"
+        },
+        {
+            "pairing_id": 157,
+            "team_1": "Team_6",
+            "team_2": "Team_18"
+        },
+        {
+            "pairing_id": 158,
+            "team_1": "Team_6",
+            "team_2": "Team_19"
+        },
+        {
+            "pairing_id": 159,
+            "team_1": "Team_6",
+            "team_2": "Team_20"
+        },
+        {
+            "pairing_id": 160,
+            "team_1": "Team_6",
+            "team_2": "Team_21"
+        },
+        {
+            "pairing_id": 161,
+            "team_1": "Team_6",
+            "team_2": "Team_22"
+        },
+        {
+            "pairing_id": 162,
+            "team_1": "Team_6",
+            "team_2": "Team_23"
+        },
+        {
+            "pairing_id": 163,
+            "team_1": "Team_6",
+            "team_2": "Team_24"
+        },
+        {
+            "pairing_id": 164,
+            "team_1": "Team_6",
+            "team_2": "Team_25"
+        },
+        {
+            "pairing_id": 165,
+            "team_1": "Team_6",
+            "team_2": "Team_26"
+        },
+        {
+            "pairing_id": 166,
+            "team_1": "Team_6",
+            "team_2": "Team_27"
+        },
+        {
+            "pairing_id": 167,
+            "team_1": "Team_6",
+            "team_2": "Team_28"
+        },
+        {
+            "pairing_id": 168,
+            "team_1": "Team_6",
+            "team_2": "Team_29"
+        },
+        {
+            "pairing_id": 169,
+            "team_1": "Team_6",
+            "team_2": "Team_30"
+        },
+        {
+            "pairing_id": 170,
+            "team_1": "Team_6",
+            "team_2": "Team_31"
+        },
+        {
+            "pairing_id": 171,
+            "team_1": "Team_6",
+            "team_2": "Team_32"
+        },
+        {
+            "pairing_id": 172,
+            "team_1": "Team_7",
+            "team_2": "Team_8"
+        },
+        {
+            "pairing_id": 173,
+            "team_1": "Team_7",
+            "team_2": "Team_9"
+        },
+        {
+            "pairing_id": 174,
+            "team_1": "Team_7",
+            "team_2": "Team_10"
+        },
+        {
+            "pairing_id": 175,
+            "team_1": "Team_7",
+            "team_2": "Team_11"
+        },
+        {
+            "pairing_id": 176,
+            "team_1": "Team_7",
+            "team_2": "Team_12"
+        },
+        {
+            "pairing_id": 177,
+            "team_1": "Team_7",
+            "team_2": "Team_13"
+        },
+        {
+            "pairing_id": 178,
+            "team_1": "Team_7",
+            "team_2": "Team_14"
+        },
+        {
+            "pairing_id": 179,
+            "team_1": "Team_7",
+            "team_2": "Team_15"
+        },
+        {
+            "pairing_id": 180,
+            "team_1": "Team_7",
+            "team_2": "Team_16"
+        },
+        {
+            "pairing_id": 181,
+            "team_1": "Team_7",
+            "team_2": "Team_17"
+        },
+        {
+            "pairing_id": 182,
+            "team_1": "Team_7",
+            "team_2": "Team_18"
+        },
+        {
+            "pairing_id": 183,
+            "team_1": "Team_7",
+            "team_2": "Team_19"
+        },
+        {
+            "pairing_id": 184,
+            "team_1": "Team_7",
+            "team_2": "Team_20"
+        },
+        {
+            "pairing_id": 185,
+            "team_1": "Team_7",
+            "team_2": "Team_21"
+        },
+        {
+            "pairing_id": 186,
+            "team_1": "Team_7",
+            "team_2": "Team_22"
+        },
+        {
+            "pairing_id": 187,
+            "team_1": "Team_7",
+            "team_2": "Team_23"
+        },
+        {
+            "pairing_id": 188,
+            "team_1": "Team_7",
+            "team_2": "Team_24"
+        },
+        {
+            "pairing_id": 189,
+            "team_1": "Team_7",
+            "team_2": "Team_25"
+        },
+        {
+            "pairing_id": 190,
+            "team_1": "Team_7",
+            "team_2": "Team_26"
+        },
+        {
+            "pairing_id": 191,
+            "team_1": "Team_7",
+            "team_2": "Team_27"
+        },
+        {
+            "pairing_id": 192,
+            "team_1": "Team_7",
+            "team_2": "Team_28"
+        },
+        {
+            "pairing_id": 193,
+            "team_1": "Team_7",
+            "team_2": "Team_29"
+        },
+        {
+            "pairing_id": 194,
+            "team_1": "Team_7",
+            "team_2": "Team_30"
+        },
+        {
+            "pairing_id": 195,
+            "team_1": "Team_7",
+            "team_2": "Team_31"
+        },
+        {
+            "pairing_id": 196,
+            "team_1": "Team_7",
+            "team_2": "Team_32"
+        },
+        {
+            "pairing_id": 197,
+            "team_1": "Team_8",
+            "team_2": "Team_9"
+        },
+        {
+            "pairing_id": 198,
+            "team_1": "Team_8",
+            "team_2": "Team_10"
+        },
+        {
+            "pairing_id": 199,
+            "team_1": "Team_8",
+            "team_2": "Team_11"
+        },
+        {
+            "pairing_id": 200,
+            "team_1": "Team_8",
+            "team_2": "Team_12"
+        },
+        {
+            "pairing_id": 201,
+            "team_1": "Team_8",
+            "team_2": "Team_13"
+        },
+        {
+            "pairing_id": 202,
+            "team_1": "Team_8",
+            "team_2": "Team_14"
+        },
+        {
+            "pairing_id": 203,
+            "team_1": "Team_8",
+            "team_2": "Team_15"
+        },
+        {
+            "pairing_id": 204,
+            "team_1": "Team_8",
+            "team_2": "Team_16"
+        },
+        {
+            "pairing_id": 205,
+            "team_1": "Team_8",
+            "team_2": "Team_17"
+        },
+        {
+            "pairing_id": 206,
+            "team_1": "Team_8",
+            "team_2": "Team_18"
+        },
+        {
+            "pairing_id": 207,
+            "team_1": "Team_8",
+            "team_2": "Team_19"
+        },
+        {
+            "pairing_id": 208,
+            "team_1": "Team_8",
+            "team_2": "Team_20"
+        },
+        {
+            "pairing_id": 209,
+            "team_1": "Team_8",
+            "team_2": "Team_21"
+        },
+        {
+            "pairing_id": 210,
+            "team_1": "Team_8",
+            "team_2": "Team_22"
+        },
+        {
+            "pairing_id": 211,
+            "team_1": "Team_8",
+            "team_2": "Team_23"
+        },
+        {
+            "pairing_id": 212,
+            "team_1": "Team_8",
+            "team_2": "Team_24"
+        },
+        {
+            "pairing_id": 213,
+            "team_1": "Team_8",
+            "team_2": "Team_25"
+        },
+        {
+            "pairing_id": 214,
+            "team_1": "Team_8",
+            "team_2": "Team_26"
+        },
+        {
+            "pairing_id": 215,
+            "team_1": "Team_8",
+            "team_2": "Team_27"
+        },
+        {
+            "pairing_id": 216,
+            "team_1": "Team_8",
+            "team_2": "Team_28"
+        },
+        {
+            "pairing_id": 217,
+            "team_1": "Team_8",
+            "team_2": "Team_29"
+        },
+        {
+            "pairing_id": 218,
+            "team_1": "Team_8",
+            "team_2": "Team_30"
+        },
+        {
+            "pairing_id": 219,
+            "team_1": "Team_8",
+            "team_2": "Team_31"
+        },
+        {
+            "pairing_id": 220,
+            "team_1": "Team_8",
+            "team_2": "Team_32"
+        },
+        {
+            "pairing_id": 221,
+            "team_1": "Team_9",
+            "team_2": "Team_10"
+        },
+        {
+            "pairing_id": 222,
+            "team_1": "Team_9",
+            "team_2": "Team_11"
+        },
+        {
+            "pairing_id": 223,
+            "team_1": "Team_9",
+            "team_2": "Team_12"
+        },
+        {
+            "pairing_id": 224,
+            "team_1": "Team_9",
+            "team_2": "Team_13"
+        },
+        {
+            "pairing_id": 225,
+            "team_1": "Team_9",
+            "team_2": "Team_14"
+        },
+        {
+            "pairing_id": 226,
+            "team_1": "Team_9",
+            "team_2": "Team_15"
+        },
+        {
+            "pairing_id": 227,
+            "team_1": "Team_9",
+            "team_2": "Team_16"
+        },
+        {
+            "pairing_id": 228,
+            "team_1": "Team_9",
+            "team_2": "Team_17"
+        },
+        {
+            "pairing_id": 229,
+            "team_1": "Team_9",
+            "team_2": "Team_18"
+        },
+        {
+            "pairing_id": 230,
+            "team_1": "Team_9",
+            "team_2": "Team_19"
+        },
+        {
+            "pairing_id": 231,
+            "team_1": "Team_9",
+            "team_2": "Team_20"
+        },
+        {
+            "pairing_id": 232,
+            "team_1": "Team_9",
+            "team_2": "Team_21"
+        },
+        {
+            "pairing_id": 233,
+            "team_1": "Team_9",
+            "team_2": "Team_22"
+        },
+        {
+            "pairing_id": 234,
+            "team_1": "Team_9",
+            "team_2": "Team_23"
+        },
+        {
+            "pairing_id": 235,
+            "team_1": "Team_9",
+            "team_2": "Team_24"
+        },
+        {
+            "pairing_id": 236,
+            "team_1": "Team_9",
+            "team_2": "Team_25"
+        },
+        {
+            "pairing_id": 237,
+            "team_1": "Team_9",
+            "team_2": "Team_26"
+        },
+        {
+            "pairing_id": 238,
+            "team_1": "Team_9",
+            "team_2": "Team_27"
+        },
+        {
+            "pairing_id": 239,
+            "team_1": "Team_9",
+            "team_2": "Team_28"
+        },
+        {
+            "pairing_id": 240,
+            "team_1": "Team_9",
+            "team_2": "Team_29"
+        },
+        {
+            "pairing_id": 241,
+            "team_1": "Team_9",
+            "team_2": "Team_30"
+        },
+        {
+            "pairing_id": 242,
+            "team_1": "Team_9",
+            "team_2": "Team_31"
+        },
+        {
+            "pairing_id": 243,
+            "team_1": "Team_9",
+            "team_2": "Team_32"
+        },
+        {
+            "pairing_id": 244,
+            "team_1": "Team_10",
+            "team_2": "Team_11"
+        },
+        {
+            "pairing_id": 245,
+            "team_1": "Team_10",
+            "team_2": "Team_12"
+        },
+        {
+            "pairing_id": 246,
+            "team_1": "Team_10",
+            "team_2": "Team_13"
+        },
+        {
+            "pairing_id": 247,
+            "team_1": "Team_10",
+            "team_2": "Team_14"
+        },
+        {
+            "pairing_id": 248,
+            "team_1": "Team_10",
+            "team_2": "Team_15"
+        },
+        {
+            "pairing_id": 249,
+            "team_1": "Team_10",
+            "team_2": "Team_16"
+        },
+        {
+            "pairing_id": 250,
+            "team_1": "Team_10",
+            "team_2": "Team_17"
+        },
+        {
+            "pairing_id": 251,
+            "team_1": "Team_10",
+            "team_2": "Team_18"
+        },
+        {
+            "pairing_id": 252,
+            "team_1": "Team_10",
+            "team_2": "Team_19"
+        },
+        {
+            "pairing_id": 253,
+            "team_1": "Team_10",
+            "team_2": "Team_20"
+        },
+        {
+            "pairing_id": 254,
+            "team_1": "Team_10",
+            "team_2": "Team_21"
+        },
+        {
+            "pairing_id": 255,
+            "team_1": "Team_10",
+            "team_2": "Team_22"
+        },
+        {
+            "pairing_id": 256,
+            "team_1": "Team_10",
+            "team_2": "Team_23"
+        },
+        {
+            "pairing_id": 257,
+            "team_1": "Team_10",
+            "team_2": "Team_24"
+        },
+        {
+            "pairing_id": 258,
+            "team_1": "Team_10",
+            "team_2": "Team_25"
+        },
+        {
+            "pairing_id": 259,
+            "team_1": "Team_10",
+            "team_2": "Team_26"
+        },
+        {
+            "pairing_id": 260,
+            "team_1": "Team_10",
+            "team_2": "Team_27"
+        },
+        {
+            "pairing_id": 261,
+            "team_1": "Team_10",
+            "team_2": "Team_28"
+        },
+        {
+            "pairing_id": 262,
+            "team_1": "Team_10",
+            "team_2": "Team_29"
+        },
+        {
+            "pairing_id": 263,
+            "team_1": "Team_10",
+            "team_2": "Team_30"
+        },
+        {
+            "pairing_id": 264,
+            "team_1": "Team_10",
+            "team_2": "Team_31"
+        },
+        {
+            "pairing_id": 265,
+            "team_1": "Team_10",
+            "team_2": "Team_32"
+        },
+        {
+            "pairing_id": 266,
+            "team_1": "Team_11",
+            "team_2": "Team_12"
+        },
+        {
+            "pairing_id": 267,
+            "team_1": "Team_11",
+            "team_2": "Team_13"
+        },
+        {
+            "pairing_id": 268,
+            "team_1": "Team_11",
+            "team_2": "Team_14"
+        },
+        {
+            "pairing_id": 269,
+            "team_1": "Team_11",
+            "team_2": "Team_15"
+        },
+        {
+            "pairing_id": 270,
+            "team_1": "Team_11",
+            "team_2": "Team_16"
+        },
+        {
+            "pairing_id": 271,
+            "team_1": "Team_11",
+            "team_2": "Team_17"
+        },
+        {
+            "pairing_id": 272,
+            "team_1": "Team_11",
+            "team_2": "Team_18"
+        },
+        {
+            "pairing_id": 273,
+            "team_1": "Team_11",
+            "team_2": "Team_19"
+        },
+        {
+            "pairing_id": 274,
+            "team_1": "Team_11",
+            "team_2": "Team_20"
+        },
+        {
+            "pairing_id": 275,
+            "team_1": "Team_11",
+            "team_2": "Team_21"
+        },
+        {
+            "pairing_id": 276,
+            "team_1": "Team_11",
+            "team_2": "Team_22"
+        },
+        {
+            "pairing_id": 277,
+            "team_1": "Team_11",
+            "team_2": "Team_23"
+        },
+        {
+            "pairing_id": 278,
+            "team_1": "Team_11",
+            "team_2": "Team_24"
+        },
+        {
+            "pairing_id": 279,
+            "team_1": "Team_11",
+            "team_2": "Team_25"
+        },
+        {
+            "pairing_id": 280,
+            "team_1": "Team_11",
+            "team_2": "Team_26"
+        },
+        {
+            "pairing_id": 281,
+            "team_1": "Team_11",
+            "team_2": "Team_27"
+        },
+        {
+            "pairing_id": 282,
+            "team_1": "Team_11",
+            "team_2": "Team_28"
+        },
+        {
+            "pairing_id": 283,
+            "team_1": "Team_11",
+            "team_2": "Team_29"
+        },
+        {
+            "pairing_id": 284,
+            "team_1": "Team_11",
+            "team_2": "Team_30"
+        },
+        {
+            "pairing_id": 285,
+            "team_1": "Team_11",
+            "team_2": "Team_31"
+        },
+        {
+            "pairing_id": 286,
+            "team_1": "Team_11",
+            "team_2": "Team_32"
+        },
+        {
+            "pairing_id": 287,
+            "team_1": "Team_12",
+            "team_2": "Team_13"
+        },
+        {
+            "pairing_id": 288,
+            "team_1": "Team_12",
+            "team_2": "Team_14"
+        },
+        {
+            "pairing_id": 289,
+            "team_1": "Team_12",
+            "team_2": "Team_15"
+        },
+        {
+            "pairing_id": 290,
+            "team_1": "Team_12",
+            "team_2": "Team_16"
+        },
+        {
+            "pairing_id": 291,
+            "team_1": "Team_12",
+            "team_2": "Team_17"
+        },
+        {
+            "pairing_id": 292,
+            "team_1": "Team_12",
+            "team_2": "Team_18"
+        },
+        {
+            "pairing_id": 293,
+            "team_1": "Team_12",
+            "team_2": "Team_19"
+        },
+        {
+            "pairing_id": 294,
+            "team_1": "Team_12",
+            "team_2": "Team_20"
+        },
+        {
+            "pairing_id": 295,
+            "team_1": "Team_12",
+            "team_2": "Team_21"
+        },
+        {
+            "pairing_id": 296,
+            "team_1": "Team_12",
+            "team_2": "Team_22"
+        },
+        {
+            "pairing_id": 297,
+            "team_1": "Team_12",
+            "team_2": "Team_23"
+        },
+        {
+            "pairing_id": 298,
+            "team_1": "Team_12",
+            "team_2": "Team_24"
+        },
+        {
+            "pairing_id": 299,
+            "team_1": "Team_12",
+            "team_2": "Team_25"
+        },
+        {
+            "pairing_id": 300,
+            "team_1": "Team_12",
+            "team_2": "Team_26"
+        },
+        {
+            "pairing_id": 301,
+            "team_1": "Team_12",
+            "team_2": "Team_27"
+        },
+        {
+            "pairing_id": 302,
+            "team_1": "Team_12",
+            "team_2": "Team_28"
+        },
+        {
+            "pairing_id": 303,
+            "team_1": "Team_12",
+            "team_2": "Team_29"
+        },
+        {
+            "pairing_id": 304,
+            "team_1": "Team_12",
+            "team_2": "Team_30"
+        },
+        {
+            "pairing_id": 305,
+            "team_1": "Team_12",
+            "team_2": "Team_31"
+        },
+        {
+            "pairing_id": 306,
+            "team_1": "Team_12",
+            "team_2": "Team_32"
+        },
+        {
+            "pairing_id": 307,
+            "team_1": "Team_13",
+            "team_2": "Team_14"
+        },
+        {
+            "pairing_id": 308,
+            "team_1": "Team_13",
+            "team_2": "Team_15"
+        },
+        {
+            "pairing_id": 309,
+            "team_1": "Team_13",
+            "team_2": "Team_16"
+        },
+        {
+            "pairing_id": 310,
+            "team_1": "Team_13",
+            "team_2": "Team_17"
+        },
+        {
+            "pairing_id": 311,
+            "team_1": "Team_13",
+            "team_2": "Team_18"
+        },
+        {
+            "pairing_id": 312,
+            "team_1": "Team_13",
+            "team_2": "Team_19"
+        },
+        {
+            "pairing_id": 313,
+            "team_1": "Team_13",
+            "team_2": "Team_20"
+        },
+        {
+            "pairing_id": 314,
+            "team_1": "Team_13",
+            "team_2": "Team_21"
+        },
+        {
+            "pairing_id": 315,
+            "team_1": "Team_13",
+            "team_2": "Team_22"
+        },
+        {
+            "pairing_id": 316,
+            "team_1": "Team_13",
+            "team_2": "Team_23"
+        },
+        {
+            "pairing_id": 317,
+            "team_1": "Team_13",
+            "team_2": "Team_24"
+        },
+        {
+            "pairing_id": 318,
+            "team_1": "Team_13",
+            "team_2": "Team_25"
+        },
+        {
+            "pairing_id": 319,
+            "team_1": "Team_13",
+            "team_2": "Team_26"
+        },
+        {
+            "pairing_id": 320,
+            "team_1": "Team_13",
+            "team_2": "Team_27"
+        },
+        {
+            "pairing_id": 321,
+            "team_1": "Team_13",
+            "team_2": "Team_28"
+        },
+        {
+            "pairing_id": 322,
+            "team_1": "Team_13",
+            "team_2": "Team_29"
+        },
+        {
+            "pairing_id": 323,
+            "team_1": "Team_13",
+            "team_2": "Team_30"
+        },
+        {
+            "pairing_id": 324,
+            "team_1": "Team_13",
+            "team_2": "Team_31"
+        },
+        {
+            "pairing_id": 325,
+            "team_1": "Team_13",
+            "team_2": "Team_32"
+        },
+        {
+            "pairing_id": 326,
+            "team_1": "Team_14",
+            "team_2": "Team_15"
+        },
+        {
+            "pairing_id": 327,
+            "team_1": "Team_14",
+            "team_2": "Team_16"
+        },
+        {
+            "pairing_id": 328,
+            "team_1": "Team_14",
+            "team_2": "Team_17"
+        },
+        {
+            "pairing_id": 329,
+            "team_1": "Team_14",
+            "team_2": "Team_18"
+        },
+        {
+            "pairing_id": 330,
+            "team_1": "Team_14",
+            "team_2": "Team_19"
+        },
+        {
+            "pairing_id": 331,
+            "team_1": "Team_14",
+            "team_2": "Team_20"
+        },
+        {
+            "pairing_id": 332,
+            "team_1": "Team_14",
+            "team_2": "Team_21"
+        },
+        {
+            "pairing_id": 333,
+            "team_1": "Team_14",
+            "team_2": "Team_22"
+        },
+        {
+            "pairing_id": 334,
+            "team_1": "Team_14",
+            "team_2": "Team_23"
+        },
+        {
+            "pairing_id": 335,
+            "team_1": "Team_14",
+            "team_2": "Team_24"
+        },
+        {
+            "pairing_id": 336,
+            "team_1": "Team_14",
+            "team_2": "Team_25"
+        },
+        {
+            "pairing_id": 337,
+            "team_1": "Team_14",
+            "team_2": "Team_26"
+        },
+        {
+            "pairing_id": 338,
+            "team_1": "Team_14",
+            "team_2": "Team_27"
+        },
+        {
+            "pairing_id": 339,
+            "team_1": "Team_14",
+            "team_2": "Team_28"
+        },
+        {
+            "pairing_id": 340,
+            "team_1": "Team_14",
+            "team_2": "Team_29"
+        },
+        {
+            "pairing_id": 341,
+            "team_1": "Team_14",
+            "team_2": "Team_30"
+        },
+        {
+            "pairing_id": 342,
+            "team_1": "Team_14",
+            "team_2": "Team_31"
+        },
+        {
+            "pairing_id": 343,
+            "team_1": "Team_14",
+            "team_2": "Team_32"
+        },
+        {
+            "pairing_id": 344,
+            "team_1": "Team_15",
+            "team_2": "Team_16"
+        },
+        {
+            "pairing_id": 345,
+            "team_1": "Team_15",
+            "team_2": "Team_17"
+        },
+        {
+            "pairing_id": 346,
+            "team_1": "Team_15",
+            "team_2": "Team_18"
+        },
+        {
+            "pairing_id": 347,
+            "team_1": "Team_15",
+            "team_2": "Team_19"
+        },
+        {
+            "pairing_id": 348,
+            "team_1": "Team_15",
+            "team_2": "Team_20"
+        },
+        {
+            "pairing_id": 349,
+            "team_1": "Team_15",
+            "team_2": "Team_21"
+        },
+        {
+            "pairing_id": 350,
+            "team_1": "Team_15",
+            "team_2": "Team_22"
+        },
+        {
+            "pairing_id": 351,
+            "team_1": "Team_15",
+            "team_2": "Team_23"
+        },
+        {
+            "pairing_id": 352,
+            "team_1": "Team_15",
+            "team_2": "Team_24"
+        },
+        {
+            "pairing_id": 353,
+            "team_1": "Team_15",
+            "team_2": "Team_25"
+        },
+        {
+            "pairing_id": 354,
+            "team_1": "Team_15",
+            "team_2": "Team_26"
+        },
+        {
+            "pairing_id": 355,
+            "team_1": "Team_15",
+            "team_2": "Team_27"
+        },
+        {
+            "pairing_id": 356,
+            "team_1": "Team_15",
+            "team_2": "Team_28"
+        },
+        {
+            "pairing_id": 357,
+            "team_1": "Team_15",
+            "team_2": "Team_29"
+        },
+        {
+            "pairing_id": 358,
+            "team_1": "Team_15",
+            "team_2": "Team_30"
+        },
+        {
+            "pairing_id": 359,
+            "team_1": "Team_15",
+            "team_2": "Team_31"
+        },
+        {
+            "pairing_id": 360,
+            "team_1": "Team_15",
+            "team_2": "Team_32"
+        },
+        {
+            "pairing_id": 361,
+            "team_1": "Team_16",
+            "team_2": "Team_17"
+        },
+        {
+            "pairing_id": 362,
+            "team_1": "Team_16",
+            "team_2": "Team_18"
+        },
+        {
+            "pairing_id": 363,
+            "team_1": "Team_16",
+            "team_2": "Team_19"
+        },
+        {
+            "pairing_id": 364,
+            "team_1": "Team_16",
+            "team_2": "Team_20"
+        },
+        {
+            "pairing_id": 365,
+            "team_1": "Team_16",
+            "team_2": "Team_21"
+        },
+        {
+            "pairing_id": 366,
+            "team_1": "Team_16",
+            "team_2": "Team_22"
+        },
+        {
+            "pairing_id": 367,
+            "team_1": "Team_16",
+            "team_2": "Team_23"
+        },
+        {
+            "pairing_id": 368,
+            "team_1": "Team_16",
+            "team_2": "Team_24"
+        },
+        {
+            "pairing_id": 369,
+            "team_1": "Team_16",
+            "team_2": "Team_25"
+        },
+        {
+            "pairing_id": 370,
+            "team_1": "Team_16",
+            "team_2": "Team_26"
+        },
+        {
+            "pairing_id": 371,
+            "team_1": "Team_16",
+            "team_2": "Team_27"
+        },
+        {
+            "pairing_id": 372,
+            "team_1": "Team_16",
+            "team_2": "Team_28"
+        },
+        {
+            "pairing_id": 373,
+            "team_1": "Team_16",
+            "team_2": "Team_29"
+        },
+        {
+            "pairing_id": 374,
+            "team_1": "Team_16",
+            "team_2": "Team_30"
+        },
+        {
+            "pairing_id": 375,
+            "team_1": "Team_16",
+            "team_2": "Team_31"
+        },
+        {
+            "pairing_id": 376,
+            "team_1": "Team_16",
+            "team_2": "Team_32"
+        },
+        {
+            "pairing_id": 377,
+            "team_1": "Team_17",
+            "team_2": "Team_18"
+        },
+        {
+            "pairing_id": 378,
+            "team_1": "Team_17",
+            "team_2": "Team_19"
+        },
+        {
+            "pairing_id": 379,
+            "team_1": "Team_17",
+            "team_2": "Team_20"
+        },
+        {
+            "pairing_id": 380,
+            "team_1": "Team_17",
+            "team_2": "Team_21"
+        },
+        {
+            "pairing_id": 381,
+            "team_1": "Team_17",
+            "team_2": "Team_22"
+        },
+        {
+            "pairing_id": 382,
+            "team_1": "Team_17",
+            "team_2": "Team_23"
+        },
+        {
+            "pairing_id": 383,
+            "team_1": "Team_17",
+            "team_2": "Team_24"
+        },
+        {
+            "pairing_id": 384,
+            "team_1": "Team_17",
+            "team_2": "Team_25"
+        },
+        {
+            "pairing_id": 385,
+            "team_1": "Team_17",
+            "team_2": "Team_26"
+        },
+        {
+            "pairing_id": 386,
+            "team_1": "Team_17",
+            "team_2": "Team_27"
+        },
+        {
+            "pairing_id": 387,
+            "team_1": "Team_17",
+            "team_2": "Team_28"
+        },
+        {
+            "pairing_id": 388,
+            "team_1": "Team_17",
+            "team_2": "Team_29"
+        },
+        {
+            "pairing_id": 389,
+            "team_1": "Team_17",
+            "team_2": "Team_30"
+        },
+        {
+            "pairing_id": 390,
+            "team_1": "Team_17",
+            "team_2": "Team_31"
+        },
+        {
+            "pairing_id": 391,
+            "team_1": "Team_17",
+            "team_2": "Team_32"
+        },
+        {
+            "pairing_id": 392,
+            "team_1": "Team_18",
+            "team_2": "Team_19"
+        },
+        {
+            "pairing_id": 393,
+            "team_1": "Team_18",
+            "team_2": "Team_20"
+        },
+        {
+            "pairing_id": 394,
+            "team_1": "Team_18",
+            "team_2": "Team_21"
+        },
+        {
+            "pairing_id": 395,
+            "team_1": "Team_18",
+            "team_2": "Team_22"
+        },
+        {
+            "pairing_id": 396,
+            "team_1": "Team_18",
+            "team_2": "Team_23"
+        },
+        {
+            "pairing_id": 397,
+            "team_1": "Team_18",
+            "team_2": "Team_24"
+        },
+        {
+            "pairing_id": 398,
+            "team_1": "Team_18",
+            "team_2": "Team_25"
+        },
+        {
+            "pairing_id": 399,
+            "team_1": "Team_18",
+            "team_2": "Team_26"
+        },
+        {
+            "pairing_id": 400,
+            "team_1": "Team_18",
+            "team_2": "Team_27"
+        },
+        {
+            "pairing_id": 401,
+            "team_1": "Team_18",
+            "team_2": "Team_28"
+        },
+        {
+            "pairing_id": 402,
+            "team_1": "Team_18",
+            "team_2": "Team_29"
+        },
+        {
+            "pairing_id": 403,
+            "team_1": "Team_18",
+            "team_2": "Team_30"
+        },
+        {
+            "pairing_id": 404,
+            "team_1": "Team_18",
+            "team_2": "Team_31"
+        },
+        {
+            "pairing_id": 405,
+            "team_1": "Team_18",
+            "team_2": "Team_32"
+        },
+        {
+            "pairing_id": 406,
+            "team_1": "Team_19",
+            "team_2": "Team_20"
+        },
+        {
+            "pairing_id": 407,
+            "team_1": "Team_19",
+            "team_2": "Team_21"
+        },
+        {
+            "pairing_id": 408,
+            "team_1": "Team_19",
+            "team_2": "Team_22"
+        },
+        {
+            "pairing_id": 409,
+            "team_1": "Team_19",
+            "team_2": "Team_23"
+        },
+        {
+            "pairing_id": 410,
+            "team_1": "Team_19",
+            "team_2": "Team_24"
+        },
+        {
+            "pairing_id": 411,
+            "team_1": "Team_19",
+            "team_2": "Team_25"
+        },
+        {
+            "pairing_id": 412,
+            "team_1": "Team_19",
+            "team_2": "Team_26"
+        },
+        {
+            "pairing_id": 413,
+            "team_1": "Team_19",
+            "team_2": "Team_27"
+        },
+        {
+            "pairing_id": 414,
+            "team_1": "Team_19",
+            "team_2": "Team_28"
+        },
+        {
+            "pairing_id": 415,
+            "team_1": "Team_19",
+            "team_2": "Team_29"
+        },
+        {
+            "pairing_id": 416,
+            "team_1": "Team_19",
+            "team_2": "Team_30"
+        },
+        {
+            "pairing_id": 417,
+            "team_1": "Team_19",
+            "team_2": "Team_31"
+        },
+        {
+            "pairing_id": 418,
+            "team_1": "Team_19",
+            "team_2": "Team_32"
+        },
+        {
+            "pairing_id": 419,
+            "team_1": "Team_20",
+            "team_2": "Team_21"
+        },
+        {
+            "pairing_id": 420,
+            "team_1": "Team_20",
+            "team_2": "Team_22"
+        },
+        {
+            "pairing_id": 421,
+            "team_1": "Team_20",
+            "team_2": "Team_23"
+        },
+        {
+            "pairing_id": 422,
+            "team_1": "Team_20",
+            "team_2": "Team_24"
+        },
+        {
+            "pairing_id": 423,
+            "team_1": "Team_20",
+            "team_2": "Team_25"
+        },
+        {
+            "pairing_id": 424,
+            "team_1": "Team_20",
+            "team_2": "Team_26"
+        },
+        {
+            "pairing_id": 425,
+            "team_1": "Team_20",
+            "team_2": "Team_27"
+        },
+        {
+            "pairing_id": 426,
+            "team_1": "Team_20",
+            "team_2": "Team_28"
+        },
+        {
+            "pairing_id": 427,
+            "team_1": "Team_20",
+            "team_2": "Team_29"
+        },
+        {
+            "pairing_id": 428,
+            "team_1": "Team_20",
+            "team_2": "Team_30"
+        },
+        {
+            "pairing_id": 429,
+            "team_1": "Team_20",
+            "team_2": "Team_31"
+        },
+        {
+            "pairing_id": 430,
+            "team_1": "Team_20",
+            "team_2": "Team_32"
+        },
+        {
+            "pairing_id": 431,
+            "team_1": "Team_21",
+            "team_2": "Team_22"
+        },
+        {
+            "pairing_id": 432,
+            "team_1": "Team_21",
+            "team_2": "Team_23"
+        },
+        {
+            "pairing_id": 433,
+            "team_1": "Team_21",
+            "team_2": "Team_24"
+        },
+        {
+            "pairing_id": 434,
+            "team_1": "Team_21",
+            "team_2": "Team_25"
+        },
+        {
+            "pairing_id": 435,
+            "team_1": "Team_21",
+            "team_2": "Team_26"
+        },
+        {
+            "pairing_id": 436,
+            "team_1": "Team_21",
+            "team_2": "Team_27"
+        },
+        {
+            "pairing_id": 437,
+            "team_1": "Team_21",
+            "team_2": "Team_28"
+        },
+        {
+            "pairing_id": 438,
+            "team_1": "Team_21",
+            "team_2": "Team_29"
+        },
+        {
+            "pairing_id": 439,
+            "team_1": "Team_21",
+            "team_2": "Team_30"
+        },
+        {
+            "pairing_id": 440,
+            "team_1": "Team_21",
+            "team_2": "Team_31"
+        },
+        {
+            "pairing_id": 441,
+            "team_1": "Team_21",
+            "team_2": "Team_32"
+        },
+        {
+            "pairing_id": 442,
+            "team_1": "Team_22",
+            "team_2": "Team_23"
+        },
+        {
+            "pairing_id": 443,
+            "team_1": "Team_22",
+            "team_2": "Team_24"
+        },
+        {
+            "pairing_id": 444,
+            "team_1": "Team_22",
+            "team_2": "Team_25"
+        },
+        {
+            "pairing_id": 445,
+            "team_1": "Team_22",
+            "team_2": "Team_26"
+        },
+        {
+            "pairing_id": 446,
+            "team_1": "Team_22",
+            "team_2": "Team_27"
+        },
+        {
+            "pairing_id": 447,
+            "team_1": "Team_22",
+            "team_2": "Team_28"
+        },
+        {
+            "pairing_id": 448,
+            "team_1": "Team_22",
+            "team_2": "Team_29"
+        },
+        {
+            "pairing_id": 449,
+            "team_1": "Team_22",
+            "team_2": "Team_30"
+        },
+        {
+            "pairing_id": 450,
+            "team_1": "Team_22",
+            "team_2": "Team_31"
+        },
+        {
+            "pairing_id": 451,
+            "team_1": "Team_22",
+            "team_2": "Team_32"
+        },
+        {
+            "pairing_id": 452,
+            "team_1": "Team_23",
+            "team_2": "Team_24"
+        },
+        {
+            "pairing_id": 453,
+            "team_1": "Team_23",
+            "team_2": "Team_25"
+        },
+        {
+            "pairing_id": 454,
+            "team_1": "Team_23",
+            "team_2": "Team_26"
+        },
+        {
+            "pairing_id": 455,
+            "team_1": "Team_23",
+            "team_2": "Team_27"
+        },
+        {
+            "pairing_id": 456,
+            "team_1": "Team_23",
+            "team_2": "Team_28"
+        },
+        {
+            "pairing_id": 457,
+            "team_1": "Team_23",
+            "team_2": "Team_29"
+        },
+        {
+            "pairing_id": 458,
+            "team_1": "Team_23",
+            "team_2": "Team_30"
+        },
+        {
+            "pairing_id": 459,
+            "team_1": "Team_23",
+            "team_2": "Team_31"
+        },
+        {
+            "pairing_id": 460,
+            "team_1": "Team_23",
+            "team_2": "Team_32"
+        },
+        {
+            "pairing_id": 461,
+            "team_1": "Team_24",
+            "team_2": "Team_25"
+        },
+        {
+            "pairing_id": 462,
+            "team_1": "Team_24",
+            "team_2": "Team_26"
+        },
+        {
+            "pairing_id": 463,
+            "team_1": "Team_24",
+            "team_2": "Team_27"
+        },
+        {
+            "pairing_id": 464,
+            "team_1": "Team_24",
+            "team_2": "Team_28"
+        },
+        {
+            "pairing_id": 465,
+            "team_1": "Team_24",
+            "team_2": "Team_29"
+        },
+        {
+            "pairing_id": 466,
+            "team_1": "Team_24",
+            "team_2": "Team_30"
+        },
+        {
+            "pairing_id": 467,
+            "team_1": "Team_24",
+            "team_2": "Team_31"
+        },
+        {
+            "pairing_id": 468,
+            "team_1": "Team_24",
+            "team_2": "Team_32"
+        },
+        {
+            "pairing_id": 469,
+            "team_1": "Team_25",
+            "team_2": "Team_26"
+        },
+        {
+            "pairing_id": 470,
+            "team_1": "Team_25",
+            "team_2": "Team_27"
+        },
+        {
+            "pairing_id": 471,
+            "team_1": "Team_25",
+            "team_2": "Team_28"
+        },
+        {
+            "pairing_id": 472,
+            "team_1": "Team_25",
+            "team_2": "Team_29"
+        },
+        {
+            "pairing_id": 473,
+            "team_1": "Team_25",
+            "team_2": "Team_30"
+        },
+        {
+            "pairing_id": 474,
+            "team_1": "Team_25",
+            "team_2": "Team_31"
+        },
+        {
+            "pairing_id": 475,
+            "team_1": "Team_25",
+            "team_2": "Team_32"
+        },
+        {
+            "pairing_id": 476,
+            "team_1": "Team_26",
+            "team_2": "Team_27"
+        },
+        {
+            "pairing_id": 477,
+            "team_1": "Team_26",
+            "team_2": "Team_28"
+        },
+        {
+            "pairing_id": 478,
+            "team_1": "Team_26",
+            "team_2": "Team_29"
+        },
+        {
+            "pairing_id": 479,
+            "team_1": "Team_26",
+            "team_2": "Team_30"
+        },
+        {
+            "pairing_id": 480,
+            "team_1": "Team_26",
+            "team_2": "Team_31"
+        },
+        {
+            "pairing_id": 481,
+            "team_1": "Team_26",
+            "team_2": "Team_32"
+        },
+        {
+            "pairing_id": 482,
+            "team_1": "Team_27",
+            "team_2": "Team_28"
+        },
+        {
+            "pairing_id": 483,
+            "team_1": "Team_27",
+            "team_2": "Team_29"
+        },
+        {
+            "pairing_id": 484,
+            "team_1": "Team_27",
+            "team_2": "Team_30"
+        },
+        {
+            "pairing_id": 485,
+            "team_1": "Team_27",
+            "team_2": "Team_31"
+        },
+        {
+            "pairing_id": 486,
+            "team_1": "Team_27",
+            "team_2": "Team_32"
+        },
+        {
+            "pairing_id": 487,
+            "team_1": "Team_28",
+            "team_2": "Team_29"
+        },
+        {
+            "pairing_id": 488,
+            "team_1": "Team_28",
+            "team_2": "Team_30"
+        },
+        {
+            "pairing_id": 489,
+            "team_1": "Team_28",
+            "team_2": "Team_31"
+        },
+        {
+            "pairing_id": 490,
+            "team_1": "Team_28",
+            "team_2": "Team_32"
+        },
+        {
+            "pairing_id": 491,
+            "team_1": "Team_29",
+            "team_2": "Team_30"
+        },
+        {
+            "pairing_id": 492,
+            "team_1": "Team_29",
+            "team_2": "Team_31"
+        },
+        {
+            "pairing_id": 493,
+            "team_1": "Team_29",
+            "team_2": "Team_32"
+        },
+        {
+            "pairing_id": 494,
+            "team_1": "Team_30",
+            "team_2": "Team_31"
+        },
+        {
+            "pairing_id": 495,
+            "team_1": "Team_30",
+            "team_2": "Team_32"
+        },
+        {
+            "pairing_id": 496,
+            "team_1": "Team_31",
+            "team_2": "Team_32"
+        }
+    ]
+}
