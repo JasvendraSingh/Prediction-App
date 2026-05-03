@@ -1,11 +1,19 @@
-const origin = window.location.origin;
+// Priority: 
+// 1. Environment variable (set in Render dashboard as VITE_API_URL)
+// 2. Development localhost detection
+// 3. Current origin (last resort)
+
+const VITE_API_URL = import.meta.env.VITE_API_URL;
+const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
 
 let detectedBackend = "";
 
-if (origin.includes(":5173")) {
-  detectedBackend = origin.replace(":5173", ":8000");
+if (VITE_API_URL) {
+  detectedBackend = VITE_API_URL;
+} else if (isLocalhost) {
+  detectedBackend = "http://localhost:8000";
 } else {
-  detectedBackend = import.meta.env.VITE_API_URL || origin;
+  detectedBackend = window.location.origin;
 }
 
 export const API_BASE = detectedBackend.replace(/\/+$/, "");

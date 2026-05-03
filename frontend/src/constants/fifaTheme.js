@@ -1,30 +1,33 @@
 export const fifaTheme = {
   background: {
-    base:
-      "linear-gradient(0deg, " +
-      "rgba(221, 65, 27, 1) 0%, #ac8463ff 20%, " +  
-      "#047083ff 30%, #012e2eff 100%" +    
-      ")",
-
-    panel:
-      "linear-gradient(180deg, rgba(41,35,35,0.02), rgba(255,255,255,0.01))",
-
-    stripe:
-      "linear-gradient(90deg, rgba(255,255,255,0.02) 0%, rgba(0,0,0,0.0) 100%)",
+    base: "radial-gradient(ellipse at 20% 80%, #001a3a 0%, transparent 55%), " +
+          "radial-gradient(ellipse at 80% 15%, #002255 0%, transparent 55%), " +
+          "linear-gradient(160deg, #000a1a 0%, #001433 50%, #000d22 100%)",
+    glass: "rgba(0, 40, 90, 0.45)",
+    glassDark: "rgba(0, 15, 40, 0.75)",
+    panel: "linear-gradient(145deg, rgba(0, 50, 110, 0.3), rgba(0, 20, 50, 0.5))",
   },
 
-  // Highlights
-  gold: "#fde7d1ff",
-  goldSoft: "rgba(246, 196, 59, 0.71)",
-  goldStrong: "#867644ff",
+  // Premium Highlights
+  gold: "#FFD700",
+  goldGradient: "linear-gradient(90deg, #ffe066, #ffd700, #ffb800)",
+  cyan: "#00b4ff",
+  cyanGradient: "linear-gradient(135deg, #00b4ff, #0070d8)",
+  
+  // States
+  success: "#00e676",
+  error: "#ff5252",
+  warning: "#ffab40",
 
-  // Secondary accent
-  accent: "#a88b2b",
+  // Typography
+  text: {
+    primary: "#e6f4ff",
+    secondary: "rgba(180, 220, 255, 0.7)",
+    muted: "rgba(180, 220, 255, 0.45)",
+  },
 
-  // Text colors
-  textPrimary: "#F7F5F0",
-  textMuted: "#C8C6C2",
-  textDim: "#9b9b9b",
-
-  shadow: "0 8px 30px rgba(0,0,0,0.6)",
+  // Effects
+  shadow: "0 0 40px rgba(0, 120, 255, 0.18), 0 0 80px rgba(0, 80, 180, 0.12)",
+  border: "1px solid rgba(0, 180, 255, 0.25)",
+  backdrop: "blur(22px)",
 };

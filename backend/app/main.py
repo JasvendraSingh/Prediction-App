@@ -8,12 +8,7 @@ app = FastAPI(title="FIFA World Cup 2026 Predictor API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://localhost:8000",
-        "https://*.app.github.dev",
-    ],
-    allow_origin_regex=r"https://.*\.app\.github\.dev",
+    allow_origins=["*"],  # Allow all for Render deployment
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

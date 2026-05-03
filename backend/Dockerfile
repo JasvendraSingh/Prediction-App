@@ -15,4 +15,4 @@ ENV BACKEND_PORT=$BACKEND_PORT
 
 EXPOSE $BACKEND_PORT
 
-CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port $BACKEND_PORT"]
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
